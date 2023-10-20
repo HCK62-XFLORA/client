@@ -1,14 +1,10 @@
-import { StyleSheet, Text, View } from 'react-native'
-import React from 'react'
+import { Image, StyleSheet, Text, View } from "react-native";
+import React from "react";
 
 const NavBot = () => {
-  return (
-    <View>
-      <Text>NavBot</Text>
-    </View>
-  )
-}
+  return <></>;
+};
 
-export default NavBot
+export default NavBot;
 
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({});
