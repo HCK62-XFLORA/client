@@ -1,16 +1,24 @@
-import { Button, StyleSheet, Text, View } from "react-native";
 import React from "react";
+import { Button, Image, StyleSheet, Text, View } from "react-native";
+import { useFonts, Karla_500Medium } from "@expo-google-fonts/karla";
 
 const Login = ({ navigation }) => {
+  let [fontsLoaded, fontError] = useFonts({
+    Karla_500Medium,
+  });
+
+  if (!fontsLoaded && !fontError) {
+    return null;
+  }
   return (
-    <View>
+    <>
       <Button
         onPress={() => navigation.navigate("TabNavigator")}
         title="home"
         color="#841584"
         accessibilityLabel="Learn more about this purple button"
       />
-    </View>
+    </>
   );
 };
 
