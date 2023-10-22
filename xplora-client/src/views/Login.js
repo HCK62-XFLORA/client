@@ -1,6 +1,6 @@
 import React from "react";
 import { Button, Image, StyleSheet, Text, View } from "react-native";
-import { useFonts, Karla_500Medium } from "@expo-google-fonts/karla";
+import { useFonts, Karla_500Medium, Karla_600SemiBold, Karla_700Bold } from "@expo-google-fonts/karla";
 
 const Login = ({ navigation }) => {
   let [fontsLoaded, fontError] = useFonts({

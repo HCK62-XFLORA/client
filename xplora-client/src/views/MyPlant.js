@@ -4,11 +4,13 @@ import React from 'react'
 const MyPlan = () => {
   return (
     <View>
-      <Text>MyPlan</Text>
+      <Text>MyPlant</Text>
     </View>
   )
 }
 
 export default MyPlan
 
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({
+  
+})

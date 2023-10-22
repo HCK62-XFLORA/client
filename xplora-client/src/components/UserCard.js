@@ -1,9 +1,12 @@
-import { Image, StyleSheet, Text, View } from "react-native";
+import { Image, StyleSheet, Text, View, Dimensions } from "react-native";
 import React from "react";
 
+const { height, width } = Dimensions.get('screen')
+
 const UserCard = () => {
-  return <>
-    <View style={styles.homeProfile}>
+  return (
+    <View style={{ flex: 1, flexDirection: 'row', width, justifyContent: "space-between", padding: 16 }}>
+      <View style={styles.homeProfile}>
         <Image
           style={styles.userImage}
           source={{
@@ -20,26 +23,31 @@ const UserCard = () => {
         </View>
       </View>
       {/* poin  */}
-      <View style={styles.pointContainer}>
-        <Image
-          style={styles.pointImage}
-          source={require("../../assets/point-icon.png")}
-        />
-        <View style={styles.point}>
-          <Text style={styles.pointText}>100 Points</Text>
+      <View style={{ gap: 4 }}>
+        <View style={styles.pointContainer}>
+          <Image
+            style={styles.pointImage}
+            source={require("../../assets/point-icon.png")}
+          />
+          <View style={styles.point}>
+            <Text style={styles.pointText}>100 Points</Text>
+          </View>
+        </View>
+        {/* badge */}
+        <View style={styles.pointContainer}>
+          <Image
+            style={styles.pointImage}
+            resizeMode="contain"
+            source={require("../../assets/beginner-icon.png")}
+          />
+          <View style={styles.point}>
+            <Text style={styles.pointText}>Beginner</Text>
+          </View>
         </View>
       </View>
-      {/* badge */}
-      <View style={styles.pointContainer}>
-        <Image
-          style={styles.pointImage}
-          source={require("../../assets/beginner-icon.png")}
-        />
-        <View style={styles.point}>
-          <Text style={styles.pointText}>Beginner</Text>
-        </View>
-      </View>
-  </>;
+
+    </View>
+  )
 };
 
 export default UserCard;
@@ -52,8 +60,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
     gap: 11,
     position: "relative",
-    borderWidth: 1,
-    borderColor: "gray",
+    // borderWidth: 1,
+    // borderColor: "gray",
   },
   userImage: {
     position: "relative",
@@ -96,27 +104,28 @@ const styles = StyleSheet.create({
   },
   pointContainer: {
     flexDirection: 'row',
-    width: 91,
-    height: 16,
-    alignItems: "flex-start",
-    display: "flex",
+    width: 100,
+    // margin: 2,
+    height: 20,
+    alignItems: "center",
+    // display: "flex",
     gap: 8,
-    position: "relative",
-    borderWidth: 1,
-    borderColor: "gray",
+    // position: "relative",
+    // borderWidth: 1,
+    // borderColor: "gray",
   },
   pointIcon: {
     flex: 1,
     height: 16,
     width: 16,
-    position: "relative",
+    // position: "relative",
   },
   point: {
     flex: 1,
     fontWeight: 500,
     letterSpacing: 0,
     marginTop: -1,
-    position: "relative",
+    // position: "relative",
   },
   pointText: {
     color: "#898989",
@@ -124,8 +133,8 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
   pointImage: {
-    position: "relative",
-    width: 16,
-    height: 16,
+    // position: "relative",
+    width: 18,
+    height: 18,
   },
 });
