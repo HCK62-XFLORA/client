@@ -4,20 +4,24 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Login from "./src/views/Login";
 import TabNavigator from "./src/navigators/Tabnavigator";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { SafeAreaFrameContext, SafeAreaView } from "react-native-safe-area-context";
 
 const Stack = createNativeStackNavigator();
 
 export default function App() {
   return (
-    <NavigationContainer>
-      {/* <SafeAreaView> */}
-        <Stack.Navigator>
+    // <SafeAreaView>
+    <NavigationContainer >
+        <Stack.Navigator
+          // screenOptions={{
+          //   headerShown: false
+          // }}
+        >
           <Stack.Screen name="Login" component={Login} />
           <Stack.Screen name="TabNavigator" component={TabNavigator} />
         </Stack.Navigator>
-      {/* </SafeAreaView> */}
     </NavigationContainer>
+    // </SafeAreaView>
   );
 }
 
