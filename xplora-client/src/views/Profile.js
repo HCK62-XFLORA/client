@@ -1,7 +1,7 @@
 import { ScrollView, StyleSheet, Text, View, Image, FlatList } from 'react-native'
 import React from 'react'
 import ThreadHome from '../components/Thread/ThreadHome'
-import MyPlantHome from '../components/MyPlant/MyPlantHome'
+import MyPlantCard2 from '../components/MyPlant/MyPlantCard2'
 
 const myPlantData = [
   {
@@ -112,16 +112,17 @@ const Profile = () => {
         <FlatList
             data={myPlantData}
             renderItem={({ item }) =>
-              <MyPlantHome item={item} />
+              <MyPlantCard2 item={item} />
             }
-            horizontal={true}
-            showsHorizontalScrollIndicator={false}
+            showsVerticalScrollIndicator={false}
+            numColumns={2}
             style={{
               // flex:1, 
               overflow: 'hidden',
               marginBottom: 16,
               paddingLeft: 16,
-              paddingRight: 16
+              paddingRight: 16,
+              // alignContent: 'space-between'
             }}
           />
         </View>
