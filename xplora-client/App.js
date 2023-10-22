@@ -3,6 +3,7 @@ import { StyleSheet, Text, View } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Login from "./src/views/Login";
+import AddThread from "./src/views/AddThread";
 import TabNavigator from "./src/navigators/Tabnavigator";
 import { SafeAreaFrameContext, SafeAreaView } from "react-native-safe-area-context";
 
@@ -18,6 +19,7 @@ export default function App() {
           // }}
         >
           <Stack.Screen name="Login" component={Login} />
+          <Stack.Screen name="AddThread" component={AddThread} />
           <Stack.Screen name="TabNavigator" component={TabNavigator} />
         </Stack.Navigator>
     </NavigationContainer>
