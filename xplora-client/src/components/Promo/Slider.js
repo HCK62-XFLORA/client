@@ -3,6 +3,7 @@ import React, { useRef, useState } from 'react'
 import BannerCard from "../Promo/BannerCard";
 import Pagination from '../Promo/Pagination';
 
+
 const data = [
     {
         image: require('../../../assets/PromoCard/promoCard-1.png'),

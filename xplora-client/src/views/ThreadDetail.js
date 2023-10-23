@@ -76,6 +76,7 @@ const ThreadDetail = () => {
                         paddingRight: 16,
                         height,
                     }}
+                    showsVerticalScrollIndicator={false}
                     ListHeaderComponent={
                         <View style={styles.titleContainer}>
                             <Text style={styles.title}>{forumData.text}</Text>
@@ -107,11 +108,11 @@ const ThreadDetail = () => {
                 // marginBottom: 24,
                 // width,
                 // borderWidth: 1,
-                marginTop:-30,
+                marginTop: -30,
                 backgroundColor: 'white',
                 // height:86,
-                paddingTop:14,
-                paddingBottom:34,
+                paddingTop: 14,
+                paddingBottom: 34,
                 shadowColor: "#000",
                 shadowOffset: {
                     width: 0,
@@ -215,12 +216,12 @@ const styles = StyleSheet.create({
         width: width * 0.8,
         paddingTop: 12,
         paddingBottom: 12,
-        paddingLeft:12,
+        paddingLeft: 12,
         // justifyContent: 'center',
         // alignContent:'center',
         // alignItems:'center',
         alignSelf: 'center',
-        backgroundColor:'#EEF3EC'
+        backgroundColor: '#EEF3EC'
 
     },
 })

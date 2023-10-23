@@ -61,6 +61,7 @@ const Threads = ({navigation}) => {
   return (
     <ScrollView
         style={{backgroundColor:'#DEEAE5'}}
+        showsVerticalScrollIndicator={false}
     >
       <View style={styles.topContainer}>
         <UserCard />
@@ -74,6 +75,7 @@ const Threads = ({navigation}) => {
               <Text>{item.title}</Text>
             </View>
           }
+          nestedScrollEnabled={true}
           horizontal={true}
           style={{
             // flex:1, 
@@ -103,6 +105,7 @@ const Threads = ({navigation}) => {
             paddingLeft: 16,
             paddingRight: 16,
           }}
+          nestedScrollEnabled={true}
         />
       </View>
     </ScrollView>

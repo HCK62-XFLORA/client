@@ -49,10 +49,11 @@ const myPlantData = [
 
 const { height } = Dimensions.get('screen')
 
-const MyPlan = ({navigation}) => {
+const MyPlan = ({ navigation }) => {
   return (
     <ScrollView
       style={styles.mainContainer}
+      showsVerticalScrollIndicator={false}
     >
       <View style={styles.userContentContainer}>
         <View style={styles.userContainer}>
@@ -88,19 +89,20 @@ const MyPlan = ({navigation}) => {
         />
       </View>
       <View style={styles.bottomContainer}>
-        <View style={{gap:8}}>
-        <Text style={styles.sectionTitle}>My Plant</Text>
-        <FlatList
+        <View style={{ gap: 8 }}>
+          <Text style={styles.sectionTitle}>My Plant</Text>
+          <FlatList
             data={myPlantData}
             renderItem={({ item }) =>
               // <MyPlantCard2 item={item} />
               <TouchableOpacity
-              onPress={() => {
-                navigation.navigate("MyPlantDetail", {id: item.id})
-              }}>
-              {/* <Text> Forgot Password?</Text> */}
-              <MyPlantCard2 item={item} />
-            </TouchableOpacity>
+                onPress={() => {
+                  navigation.navigate("MyPlantDetail", { id: item.id })
+                }}>
+                <MyPlantCard2 item={item}
+                  nestedScrollEnabled={true}
+                />
+              </TouchableOpacity>
             }
             showsVerticalScrollIndicator={false}
             numColumns={2}
@@ -110,6 +112,7 @@ const MyPlan = ({navigation}) => {
               marginBottom: 16,
               paddingLeft: 16,
               paddingRight: 16,
+              alignSelf:'center'
               // alignContent: 'space-between'
             }}
           />
@@ -176,7 +179,7 @@ const styles = StyleSheet.create({
     // alignItems: 'center',
     justifyContent: 'center',
     width: 126,
-    alignContent:'center',
+    alignContent: 'center',
     paddingTop: 4
     // height: 56
   },

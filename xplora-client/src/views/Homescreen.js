@@ -1,5 +1,5 @@
-import { FlatList, StyleSheet, Text, View, ScrollView } from 'react-native'
-import React from 'react'
+import { FlatList, TouchableOpacity, StyleSheet, Text, View, ScrollView } from 'react-native'
+import React, { useState } from 'react'
 import NavBottomActive from '../components/NavBottom/NavBottom-active'
 import UserCard from '../components/UserCard'
 import Slider from '../components/Promo/Slider'
@@ -53,7 +53,11 @@ const threadsData = [
   },
 ]
 
-const Homescreen = () => {
+const Homescreen = ({navigation}) => {
+ 
+
+
+
   return (
     <ScrollView
       style={{
@@ -61,8 +65,29 @@ const Homescreen = () => {
         gap: 16,
         backgroundColor: '#DEEAE5'
       }}
-      showsHorizontalScrollIndicator={false}
+      showsVerticalScrollIndicator={false}
     >
+       {/* <FlatList
+            data={myPlantData}
+            renderItem={({ item }) =>
+              <TouchableOpacity
+                onPress={() => {
+                  navigation.navigate("MyPlantDetail", { id: item.id })
+                }}>
+                <MyPlantHome item={item} />
+              </TouchableOpacity>
+            }
+            horizontal={true}
+            showsHorizontalScrollIndicator={false}
+            style={{
+              // flex:1, 
+              overflow: 'hidden',
+              marginBottom: 16,
+              paddingLeft: 16,
+              paddingRight: 16
+            }}
+          /> */}
+          {/* top container  */}
       <View style={homeStyles.topContainer}>
         <UserCard />
         <View style={homeStyles.heroContainer}>
@@ -72,8 +97,14 @@ const Homescreen = () => {
           <Text style={homeStyles.sectionTitle}>My Plant</Text>
           <FlatList
             data={myPlantData}
+            nestedScrollEnabled={true}
             renderItem={({ item }) =>
-              <MyPlantHome item={item} />
+              <TouchableOpacity
+                onPress={() => {
+                  navigation.navigate("MyPlantDetail", { id: item.id })
+                }}>
+                <MyPlantHome item={item} />
+              </TouchableOpacity>
             }
             horizontal={true}
             showsHorizontalScrollIndicator={false}
@@ -87,6 +118,7 @@ const Homescreen = () => {
           />
         </View>
       </View>
+      {/* bottom container  */}
       <View style={homeStyles.bottomContainer}>
         <Text style={homeStyles.sectionTitle}>Featured Threads</Text>
         <FlatList
@@ -101,8 +133,9 @@ const Homescreen = () => {
             paddingLeft: 16,
             paddingRight: 8,
           }}
+          nestedScrollEnabled={true}
         />
-      </View>
+      </View> 
     </ScrollView>
   )
 }

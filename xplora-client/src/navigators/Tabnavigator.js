@@ -6,14 +6,16 @@ import MyPlan from "../views/MyPlant";
 import Profile from "../views/Profile";
 import NavBottomActive from "../components/NavBottom/NavBottom-active";
 import { useState } from "react";
+import { useTheme } from "react-native-paper";
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 // const Tab = createBottomTabNavigator();
 const Tab = createMaterialBottomTabNavigator();
 
 export default function TabNavigator() {
+  const theme = useTheme()
   const [activeTab, setActiveTab] = useState('Home')
-
+  theme.colors.secondaryContainer = 'transparent'
   const handleTabPress = (route) => {
     setActiveTab(route);
   };
@@ -28,7 +30,6 @@ export default function TabNavigator() {
     <Tab.Navigator
       initialRouteName="Home"
       activeColor="white"
-
       // screenOptions={{
       //   tabBarStyle: { 
       //     // position: 'absolute'
@@ -64,9 +65,9 @@ export default function TabNavigator() {
         shadowRadius: 6.22,
         elevation: 3,
       }}
-
       screenOptions={{
         // inactiveTintColor: 'transparent'
+        activeBackgroundColor: 'transparent',
         style:{
           activeBackgroundColor: 'transparent',
         }

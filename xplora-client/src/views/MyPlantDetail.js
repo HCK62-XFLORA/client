@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View, Dimensions, Image, TouchableOpacity } from 'react-native'
-import React from 'react'
+import React, { useState } from 'react'
 import { useRoute } from '@react-navigation/native';
 import {
     useFonts,
@@ -9,12 +9,39 @@ import {
     Karla_400Regular
 } from "@expo-google-fonts/karla";
 import ThirdButton from '../components/Buttons/ThirdButton';
+import * as ImagePicker from 'expo-image-picker';
+
 
 const { width } = Dimensions.get('screen')
+
+
 
 const MyPlantDetail = ({ navigation }) => {
     const route = useRoute()
     const id = route.params.id
+
+    //   const [image, setImage] = useState(null);
+
+    let formData = new FormData()
+
+
+    const pickImage = async () => {
+        // No permissions request is necessary for launching the image library
+        let result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.All,
+            allowsEditing: true,
+            aspect: [4, 3],
+            quality: 1,
+        });
+
+        console.log(result.uri);
+        formData.append('image', { uri: result.uri })
+
+        if (!result.canceled) {
+            setImage(result.assets[0].uri);
+        }
+    };
+
 
     const myPlantData =
     {
@@ -53,8 +80,11 @@ const MyPlantDetail = ({ navigation }) => {
                     />
                 </View>
                 <Text style={styles.paragraph}>{myPlantData.description}</Text>
-                <TouchableOpacity style={{ alignItems: 'center', marginTop:16 }}>
-                    <ThirdButton title={'Add Plant'}/>
+                <TouchableOpacity
+                    style={{ alignItems: 'center', marginTop: 16 }}
+                    onPress={pickImage}
+                >
+                    <ThirdButton title={'Diagnose Plant'} />
                 </TouchableOpacity>
                 {/* <TouchableOpacity style={{ alignItems: 'center', marginTop:16 }}>
                     <View style={{

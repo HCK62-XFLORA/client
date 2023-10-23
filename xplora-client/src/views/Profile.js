@@ -1,4 +1,4 @@
-import { ScrollView, StyleSheet, Text, View, Image, FlatList } from 'react-native'
+import { ScrollView, TouchableOpacity, StyleSheet, Text, View, Image, FlatList } from 'react-native'
 import React from 'react'
 import ThreadHome from '../components/Thread/ThreadHome'
 import MyPlantCard2 from '../components/MyPlant/MyPlantCard2'
@@ -49,10 +49,11 @@ const threadsData = [
   },
 ]
 
-const Profile = () => {
+const Profile = ({navigation}) => {
   return (
     <ScrollView
       style={styles.mainContainer}
+      showsVerticalScrollIndicator={false}
     >
       <View style={styles.userContentContainer}>
         <View style={styles.userContainer}>
@@ -107,12 +108,17 @@ const Profile = () => {
         </View>
       </View>
       <View style={styles.bottomContainer}>
-        <View style={{gap:8}}>
-        <Text style={styles.sectionTitle}>My Plant</Text>
-        <FlatList
+        <View style={{ gap: 8 }}>
+          <Text style={styles.sectionTitle}>My Plant</Text>
+          <FlatList
             data={myPlantData}
             renderItem={({ item }) =>
-              <MyPlantCard2 item={item} />
+              <TouchableOpacity
+                onPress={() => {
+                  navigation.navigate("MyPlantDetail", { id: item.id })
+                }}>
+                <MyPlantCard2 item={item} />
+              </TouchableOpacity>
             }
             showsVerticalScrollIndicator={false}
             numColumns={2}
@@ -129,6 +135,7 @@ const Profile = () => {
         <Text style={styles.sectionTitle}>My Thread</Text>
         <FlatList
           data={threadsData}
+          nestedScrollEnabled={true}
           renderItem={({ item }) =>
             <ThreadHome item={item} />
           }
@@ -197,7 +204,7 @@ const styles = StyleSheet.create({
     // alignContent:'center'
     alignItems: 'center',
     gap: 22,
-    margin:16
+    margin: 16
   },
   pointImage: {
     // position: "relative",
