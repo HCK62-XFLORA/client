@@ -6,6 +6,7 @@ import Login from "./src/views/Login";
 import AddThread from "./src/views/AddThread";
 import TabNavigator from "./src/navigators/Tabnavigator";
 import { SafeAreaFrameContext, SafeAreaView } from "react-native-safe-area-context";
+import MyPlantDetail from "./src/views/MyPlantDetail";
 
 const Stack = createNativeStackNavigator();
 
@@ -21,6 +22,7 @@ export default function App() {
           <Stack.Screen name="Login" component={Login} />
           <Stack.Screen name="AddThread" component={AddThread} />
           <Stack.Screen name="TabNavigator" component={TabNavigator} />
+          <Stack.Screen name="MyPlantDetail" component={MyPlantDetail} />
         </Stack.Navigator>
     </NavigationContainer>
     // </SafeAreaView>

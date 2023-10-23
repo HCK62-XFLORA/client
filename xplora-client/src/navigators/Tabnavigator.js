@@ -6,7 +6,9 @@ import MyPlan from "../views/MyPlant";
 import Profile from "../views/Profile";
 import NavBottomActive from "../components/NavBottom/NavBottom-active";
 import { useState } from "react";
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
+// const Tab = createBottomTabNavigator();
 const Tab = createMaterialBottomTabNavigator();
 
 export default function TabNavigator() {
@@ -26,10 +28,32 @@ export default function TabNavigator() {
     <Tab.Navigator
       initialRouteName="Home"
       activeColor="white"
-      barStyle={{ 
+
+      // screenOptions={{
+      //   tabBarStyle: { 
+      //     // position: 'absolute'
+      //     backgroundColor: "#fff",
+      //       paddingBottom: 8,
+      //       paddingTop: 8,
+      //       height: 100,
+      //       shadowColor: "#000",
+      //       shadowOffset: {
+      //         width: 0,
+      //         height: -1,
+      //       },
+      //       shadowOpacity: 0.12,
+      //       shadowRadius: 6.22,
+      //       elevation: 3,
+      //    },
+      // }}
+      // -----batas
+      barStyle={{
         // backgroundColor: "#F7F9F6", 
-        backgroundColor: "#fff", 
-        paddingBottom: 8, 
+        // activeBackgroundColor: 'transparent',
+
+        backgroundColor: "#fff",
+        // paddingBottom: 8,
+        // paddingTop: 8,
         height: 85,
         shadowColor: "#000",
         shadowOffset: {
@@ -39,13 +63,65 @@ export default function TabNavigator() {
         shadowOpacity: 0.12,
         shadowRadius: 6.22,
         elevation: 3,
-       }}
-      // screenOptions={{
-      //   tabBarActiveTintColor: 'red', 
-      //   tabBarActiveBackgroundColor: 'red'
+      }}
+
+      screenOptions={{
+        // inactiveTintColor: 'transparent'
+        style:{
+          activeBackgroundColor: 'transparent',
+        }
+      }}
+
+      // tabBarOption={{
+      //   // activeTintColor: 'transparent',
+      //   // inactiveTintColor: 'transparent'
       // }}
-      // shifting={true}
-      >
+
+      // batas
+
+      // tabBarOptions={{
+      //   // style: {
+      //   //   backgroundColor: 'white',
+      //   //   // paddingBottom: 8,
+      //   //   // paddingTop: 8,
+      //   //   // height: 200,
+      //   //   shadowColor: "#000",
+      //   //   shadowOffset: {
+      //   //     width: 0,
+      //   //     height: -1,
+      //   //   },
+      //   //   shadowOpacity: 0.12,
+      //   //   shadowRadius: 6.22,
+      //   //   elevation: 3,
+      //   // },
+      //   activeTintColor: 'transparent',
+      //   inactiveTintColor: 'transparent', 
+      //   style: {
+      //     backgroundColor: 'white',
+      //     // paddingBottom: 8,
+      //     // paddingTop: 8,
+      //     height: 200,
+      //     shadowColor: "#000",
+      //     shadowOffset: {
+      //       width: 0,
+      //       height: -1,
+      //     },
+      //     shadowOpacity: 0.12,
+      //     shadowRadius: 6.22,
+      //     elevation: 3,
+      //   },
+      //   labelStyle: {
+      //     paddingBottom: 0,
+      //     marginBottom: 0
+      //   },
+      // }}
+      
+    // screenOptions={{
+    //   tabBarActiveTintColor: 'red', 
+    //   tabBarActiveBackgroundColor: 'red'
+    // }}
+    // shifting={true}
+    >
       <Tab.Screen
         name="Home"
         component={Homescreen}
@@ -54,14 +130,16 @@ export default function TabNavigator() {
         }}
         options={{
           tabBarLabel: false,
+          // activeBackgroundColor:'transparent',
+          // tabBarLabel: null,
           // tabBarBadge:true,
           // tabBarActiveBackgroundColor: 'white',
           // tabBarActiveTintColor:'red',
-          // tabBarBackgroundColor: "transparent",
-          tabBarColor: 'red',
-          tabBarStyle: customTabStyle.activeTabStyle,
+          tabBarBackgroundColor: 'transparent',
+          // tabBarColor: 'red',
+          // tabBarStyle: customTabStyle.activeTabStyle,
           tabBarIcon: () => {
-          return activeTab === "Home" ? <NavBottomActive list={0} /> : <NavBottomActive list={4} />
+            return activeTab === "Home" ? <NavBottomActive list={0} /> : <NavBottomActive list={4} />
           },
         }}
       />
@@ -73,6 +151,7 @@ export default function TabNavigator() {
         }}
         options={{
           tabBarLabel: false,
+          // tabBarLabel: null,
           tabBarIcon: () => (
             activeTab === "Threads" ? <NavBottomActive list={1} /> : <NavBottomActive list={5} />
           ),
@@ -98,6 +177,8 @@ export default function TabNavigator() {
           tabPress: () => handleTabPress("Profile"),
         }}
         options={{
+          // tabBarLabel: { tabBarShowLabel: false, },
+          // tabBarShowLabel: false,
           tabBarLabel: false,
           tabBarIcon: () => (
             activeTab === "Profile" ? <NavBottomActive list={3} /> : <NavBottomActive list={7} />
