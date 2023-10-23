@@ -8,7 +8,10 @@ import Register from "./src/views/Register";
 import AddMyPlant from "./src/views/AddMyPlant";
 import AddThreads from "./src/views/AddThreads";
 import TabNavigator from "./src/navigators/Tabnavigator";
-import { SafeAreaFrameContext, SafeAreaView } from "react-native-safe-area-context";
+import {
+  SafeAreaFrameContext,
+  SafeAreaView,
+} from "react-native-safe-area-context";
 import MyPlantDetail from "./src/views/MyPlantDetail";
 import ForumDetail from "./src/views/ThreadDetail";
 import ThreadDetail from "./src/views/ThreadDetail";
@@ -17,24 +20,31 @@ import ImagePickerExample from "./src/components/Photos/ImagePicker";
 const Stack = createNativeStackNavigator();
 
 export default function App() {
+  //* token secure store get
+  //! global state -> bikin global state pake use context
+  //? context isSignedIn
   return (
     // <SafeAreaView>
-    <NavigationContainer >
-        <Stack.Navigator
-          // screenOptions={{
-          //   headerShown: false
-          // }}
-        >
-          <Stack.Screen name="GetStarted" component={GetStarted} options={{headerShown:false}}/>
-          <Stack.Screen name="Login" component={Login} />
-          <Stack.Screen name="Register" component={Register} />
-          {/* <Stack.Screen name="ImagePicker" component={ImagePickerExample} /> */}
-          <Stack.Screen name="AddThreads" component={AddThreads} />
-          <Stack.Screen name="ThreadDetail" component={ThreadDetail} />
-          <Stack.Screen name="AddMyPlant" component={AddMyPlant} />
-          <Stack.Screen name="MyPlantDetail" component={MyPlantDetail} />
-          <Stack.Screen name="TabNavigator" component={TabNavigator} />
-        </Stack.Navigator>
+    <NavigationContainer>
+      <Stack.Navigator
+      // screenOptions={{
+      //   headerShown: false
+      // }}
+      >
+        <Stack.Screen
+          name="GetStarted"
+          component={GetStarted}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen name="Login" component={Login} />
+        <Stack.Screen name="Register" component={Register} />
+        {/* <Stack.Screen name="ImagePicker" component={ImagePickerExample} /> */}
+        <Stack.Screen name="AddThreads" component={AddThreads} />
+        <Stack.Screen name="ThreadDetail" component={ThreadDetail} />
+        <Stack.Screen name="AddMyPlant" component={AddMyPlant} />
+        <Stack.Screen name="MyPlantDetail" component={MyPlantDetail} />
+        <Stack.Screen name="TabNavigator" component={TabNavigator} />
+      </Stack.Navigator>
     </NavigationContainer>
     // </SafeAreaView>
   );

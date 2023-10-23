@@ -16,13 +16,44 @@ import {
   Karla_600SemiBold,
   Karla_700Bold,
 } from "@expo-google-fonts/karla";
+import VoucherCard from "../components/VoucherCard";
+import * as SecureStore from "expo-secure-store";
+import axios from "axios";
 
 const Login = ({ navigation }) => {
-  const [text, setText] = React.useState("");
+  const [email, setEmail] = React.useState("");
 
   const [password, setPassword] = React.useState("");
 
   const [showPassword, setShowPassword] = React.useState(false);
+
+  const handleLogin = async () => {
+    try {
+      const { data } = await axios({
+        url: BASE_URL + "/login",
+        method: "POST",
+        data: { email, password },
+      });
+      console.log("🚀 ~ file: Login.js:40 ~ handleLogin ~ data:", data)
+      // await SecureStore.setItemAsync("access_token", data.access_token); // data harus string
+      //! user id email
+      // await SecureStore.setItemAsync("access_token", data.UserId); // data harus string
+      //! rubah nilai contextnya kalo di redux nge dispatch action
+      // navigation.navigate("TabNavigator");
+    } catch (error) {
+      console.error(error);
+      Alert.alert("Alert Title", error, [
+        {
+          text: "Cancel",
+          onPress: () => console.log("Cancel Pressed"),
+          style: "cancel",
+        },
+        { text: "OK", onPress: () => console.log("OK Pressed") },
+      ]);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   let [fontsLoaded, fontError] = useFonts({
     Karla_500Medium,
@@ -43,8 +74,8 @@ const Login = ({ navigation }) => {
             mode="outlined"
             label="Email"
             placeholder="Please Input your email"
-            value={text}
-            onChangeText={(text) => setText(text)}
+            value={email}
+            onChangeText={(email) => setEmail(email)}
           />
         </View>
         <View style={styles.inputContainer}>
@@ -90,13 +121,13 @@ const Login = ({ navigation }) => {
           </Pressable>
         </View>
       </View>
-      <Button
+      {/* <Button
         style={styles.buttonSubmit}
         onPress={() => navigation.navigate("AddMyPlant")}
         title="Add Threads"
         color="#06674b"
         accessibilityLabel="Submit button"
-      />
+      /> */}
     </>
   );
 };
