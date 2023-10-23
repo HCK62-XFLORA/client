@@ -2,6 +2,7 @@ import React from "react";
 import {
   Button,
   Image,
+  Pressable,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -75,17 +76,23 @@ const Login = ({ navigation }) => {
           }}>
           <Text> Forgot Password?</Text>
         </TouchableOpacity>
-        <Button
-          style={styles.buttonSubmit}
-          onPress={() => navigation.navigate("TabNavigator")}
-          title="Submit"
-          color="#06674b"
-          accessibilityLabel="Submit button"
-        />
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => navigation.navigate("TabNavigator")}>
+            <Text style={styles.buttonText}>Let's go!</Text>
+          </TouchableOpacity>
+        </View>
+        <View style={styles.signUpContainer}>
+          <Text> Do not have an account?</Text>
+          <Pressable onPress={() => navigation.navigate("Register")}>
+            <Text style={{ color: "#06674b" }}> Sign Up</Text>
+          </Pressable>
+        </View>
       </View>
       <Button
         style={styles.buttonSubmit}
-        onPress={() => navigation.navigate("AddThread")}
+        onPress={() => navigation.navigate("AddMyPlant")}
         title="Add Threads"
         color="#06674b"
         accessibilityLabel="Submit button"
@@ -138,5 +145,31 @@ const styles = StyleSheet.create({
     height: 110,
     marginBottom: 8,
     borderRadius: 30,
+  },
+  buttonContainer: {
+    alignItems: "center",
+    justifyContent: "center",
+    marginHorizontal: 20,
+    marginVertical: 20,
+  },
+  button: {
+    height: 44,
+    width: 277,
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#06674b",
+    padding: 10,
+    borderRadius: 10,
+  },
+  buttonText: {
+    fontFamily: "Karla_500Medium",
+    fontFamily: "Karla_500Medium",
+    color: "#fff",
+    fontSize: 14,
+  },
+  signUpContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
   },
 });
