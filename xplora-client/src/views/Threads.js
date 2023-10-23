@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, FlatList, ScrollView } from 'react-native'
+import { StyleSheet, Text, View, FlatList, ScrollView, TouchableOpacity } from 'react-native'
 import React from 'react'
 import UserCard from '../components/UserCard'
 import ThreadHome from '../components/Thread/ThreadHome'
@@ -57,7 +57,7 @@ const categories = [
   },
 ]
 
-const Threads = () => {
+const Threads = ({navigation}) => {
   return (
     <ScrollView
         style={{backgroundColor:'#DEEAE5'}}
@@ -88,7 +88,13 @@ const Threads = () => {
         <FlatList
           data={threadsData}
           renderItem={({ item }) =>
+          <TouchableOpacity
+          onPress={() => {
+            navigation.navigate("ThreadDetail", {id: item.id})
+          }}
+          >
             <ThreadHome item={item} />
+          </TouchableOpacity>
           }
           style={{
             // flex:1, 

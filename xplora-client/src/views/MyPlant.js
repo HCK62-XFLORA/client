@@ -95,7 +95,6 @@ const MyPlan = ({navigation}) => {
             renderItem={({ item }) =>
               // <MyPlantCard2 item={item} />
               <TouchableOpacity
-              style={styles.showPassword}
               onPress={() => {
                 navigation.navigate("MyPlantDetail", {id: item.id})
               }}>
