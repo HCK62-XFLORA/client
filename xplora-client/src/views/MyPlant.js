@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, ScrollView, Image, FlatList, Dimensions } from 'react-native'
+import { StyleSheet, Text, View, ScrollView, Image, FlatList, Dimensions, TouchableOpacity } from 'react-native'
 import React from 'react'
 import { Button } from 'react-native-paper'
 import MyPlantCard2 from '../components/MyPlant/MyPlantCard2'
@@ -6,34 +6,42 @@ import { AntDesign } from '@expo/vector-icons';
 
 const myPlantData = [
   {
+    id: 1,
     image: require('../../assets/MyPlantCard/card1.png'),
     text: 'My Plant 1'
   },
   {
+    id: 2,
     image: require('../../assets/MyPlantCard/card2.png'),
     text: 'My Plant 2'
   },
   {
+    id: 3,
     image: require('../../assets/MyPlantCard/card3.png'),
     text: 'My Plant 3'
   },
   {
+    id: 2,
     image: require('../../assets/MyPlantCard/card2.png'),
     text: 'My Plant 2'
   },
   {
+    id: 1,
     image: require('../../assets/MyPlantCard/card1.png'),
     text: 'My Plant 1'
   },
   {
+    id: 2,
     image: require('../../assets/MyPlantCard/card2.png'),
     text: 'My Plant 2'
   },
   {
+    id: 3,
     image: require('../../assets/MyPlantCard/card3.png'),
     text: 'My Plant 3'
   },
   {
+    id: 2,
     image: require('../../assets/MyPlantCard/card2.png'),
     text: 'My Plant 2'
   },
@@ -41,7 +49,7 @@ const myPlantData = [
 
 const { height } = Dimensions.get('screen')
 
-const MyPlan = () => {
+const MyPlan = ({navigation}) => {
   return (
     <ScrollView
       style={styles.mainContainer}
@@ -85,7 +93,15 @@ const MyPlan = () => {
         <FlatList
             data={myPlantData}
             renderItem={({ item }) =>
+              // <MyPlantCard2 item={item} />
+              <TouchableOpacity
+              style={styles.showPassword}
+              onPress={() => {
+                navigation.navigate("MyPlantDetail", {id: item.id})
+              }}>
+              {/* <Text> Forgot Password?</Text> */}
               <MyPlantCard2 item={item} />
+            </TouchableOpacity>
             }
             showsVerticalScrollIndicator={false}
             numColumns={2}
