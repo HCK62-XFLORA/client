@@ -11,18 +11,16 @@ import {
   Image,
 } from "react-native";
 
-const AddThread = () => {
+const AddMyPlant = () => {
   const [title, onChangTitle] = React.useState("");
   const [description, onChangDescription] = React.useState("");
 
   return (
     <>
-      {/* <Text>title: {title}</Text>
-      <Text>description: {description}</Text> */}
       <View style={styles.mainContainer}>
-        <Text style={styles.header}>Add Thread</Text>
+        <Text style={styles.header}>Add Plant</Text>
         <View style={styles.inputContainer}>
-          <Text style={styles.label}>Thread title</Text>
+          <Text style={styles.label}>Plant name</Text>
           <TextInput
             style={styles.titleInput}
             onChangeText={onChangTitle}
@@ -34,7 +32,7 @@ const AddThread = () => {
           <TextInput
             editable
             multiline
-            numberOfLines={4}
+            numberOfLines={8}
             style={styles.descriptionInput}
             onChangeText={onChangDescription}
             value={description}
@@ -47,11 +45,13 @@ const AddThread = () => {
             onPress={() => {
               console.log("add image");
             }}>
-            {/* <Image
-              style={styles.addIcon}
-              source={require("../../assets/add-image.png")}
-            /> */}
-            <Text style={styles.addCoverText}>Add Cover</Text>
+            <View style={styles.buttonContent}>
+              <Image
+                style={styles.addIcon}
+                source={require("../../assets/add-img.png")}
+              />
+              <Text style={styles.addCoverText}>Add Photo</Text>
+            </View>
           </TouchableOpacity>
         </View>
 
@@ -61,7 +61,7 @@ const AddThread = () => {
             onPress={() => {
               console.log("post thread");
             }}>
-            <Text style={styles.buttonText}>Post Thread</Text>
+            <Text style={styles.buttonText}>Add Plant</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -69,7 +69,7 @@ const AddThread = () => {
   );
 };
 
-export default AddThread;
+export default AddMyPlant;
 
 const styles = StyleSheet.create({
   mainContainer: {
@@ -90,7 +90,7 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   descriptionInput: {
-    height: 132,
+    // height: 132,
     // margin: 12,
     borderWidth: 1,
     borderRadius: 5,
@@ -125,14 +125,19 @@ const styles = StyleSheet.create({
   },
   buttonAddCover: {
     flexDirection: "row",
-    height: 44,
-    width: 177,
     alignItems: "center",
     justifyContent: "center",
     borderWidth: 1,
     borderColor: "#06674b",
     padding: 10,
     borderRadius: 10,
+  },
+  buttonContent: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    paddingHorizontal: 5,
+    gap: 8,
   },
   buttonText: {
     fontFamily: "Karla_500Medium",
