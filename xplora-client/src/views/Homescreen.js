@@ -18,24 +18,24 @@ import axios from "axios";
 import * as SecureStore from "expo-secure-store";
 import { UserContext } from "../stores/UserContext";
 
-const myPlantData = [
-  {
-    image: require("../../assets/MyPlantCard/card1.png"),
-    text: "My Plant 1",
-  },
-  {
-    image: require("../../assets/MyPlantCard/card2.png"),
-    text: "My Plant 2",
-  },
-  {
-    image: require("../../assets/MyPlantCard/card3.png"),
-    text: "My Plant 3",
-  },
-  {
-    image: require("../../assets/MyPlantCard/card2.png"),
-    text: "My Plant 2",
-  },
-];
+// const myPlantData = [
+//   {
+//     image: require("../../assets/MyPlantCard/card1.png"),
+//     text: "My Plant 1",
+//   },
+//   {
+//     image: require("../../assets/MyPlantCard/card2.png"),
+//     text: "My Plant 2",
+//   },
+//   {
+//     image: require("../../assets/MyPlantCard/card3.png"),
+//     text: "My Plant 3",
+//   },
+//   {
+//     image: require("../../assets/MyPlantCard/card2.png"),
+//     text: "My Plant 2",
+//   },
+// ];
 
 const threadsData = [
   {
@@ -71,16 +71,21 @@ const threadsData = [
 const Homescreen = ({ navigation }) => {
   const [isLoading, setLoading] = useState(true);
   const [threads, setThreads] = useState([]);
+  const [plants, setPlants] = useState([]);
 
-  const { user, setUser } = useContext(UserContext);
+
+  const { user, userProfile, setUser } = useContext(UserContext);
+
+  console.log(userProfile, '<<<userHome Screen');
 
   const fetchThreads = async () => {
     try {
       const { data } = await axios({
-        url: "https://wadinodev.com/threads?nthThreads=1",
+        url: "https://wadinodev.com/threads?nthThreads=1&ForumId=",
         method: "GET",
       });
       setThreads(data);
+      return data
     } catch (error) {
       console.error(error);
     } finally {
@@ -88,16 +93,37 @@ const Homescreen = ({ navigation }) => {
     }
   };
 
+
+
+  const fetchPlants = async () => {
+    try {
+      const { data } = await axios({
+        url: "https://wadinodev.com/users/my-plant",
+        method: "GET",
+        headers: { access_token: user.access_token }
+      });
+      setPlants(data);
+      return data
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   const getUser = async () => {
     try {
       const access_token = await SecureStore.getItemAsync("access_token");
       const id = await SecureStore.getItemAsync("UserId");
-      console.log(
-        "🚀 ~ file: App.js:37 ~ getUser ~ access_token, id:",
+      console.log(access_token, id, '[[[[[[[inilohhhhhhh');
+      // console.log(
+      //   "🚀 ~ file: App.js:37 ~ getUser ~ access_token, id:",
+      //   access_token,
+      //   id
+      // );
+      // setUser({ access_token, id });
+      return {
         access_token,
         id
-      );
-      setUser({ access_token, id });
+      }
     } catch (error) {
       console.log("🚀 ~ file: App.js:37 ~ getUser ~ error:", error);
     }
@@ -113,97 +139,135 @@ const Homescreen = ({ navigation }) => {
     }
   };
 
-  useEffect(() => {
-    fetchThreads();
-  }, []);
+  // useEffect(() => {
+  //   // getUser()
+  //   //   .then(({ access_token }) => {
+  //   //     return fetchPlants(access_token)
+  //   //   })
+  //   //   .then(() => {
+  //   //     return fetchThreads()
+  //   //   })
+  //   //   .finally(() => {
+  //   //     setLoading(false)
+  //   //   })
+  //   //   .catch((err) => console.log(err, "here"))
+  //   fetchPlants()
+  //     .then(() => {
+  //       fetchThreads()
+  //     })
+  //     .finally(() => {
+  //       setLoading(false)
+  //     })
 
-// console.log(threads);
+  // }, []);
+
+  useEffect(() => {
+    fetchThreads()
+  }, [])
+
+  // useEffect(() => {
+  //   fetchPlants();
+  // }, []);
+
+  // useEffect(() => {
+  //   getUser();
+  // }, []);
+
+  // console.log(threads, '<<<<');
+  // console.log(user, '<<<<');
+  // console.log(plants[0].Plant.name, '<<<<');
+  // console.log(plants, '<<<<honeee');
+
 
   return (
-    <ScrollView
-      style={{
-        flex: 1,
-        gap: 16,
-        backgroundColor: "#DEEAE5",
-      }}
-      showsVerticalScrollIndicator={false}>
-      <Button
-        onPress={() => {
-          handleLogout();
-        }}
-        title="logout"
-        color="tomato"
-        accessibilityLabel="Submit button"
-      />
-      {/* <FlatList
-            data={myPlantData}
-            renderItem={({ item }) =>
-              <TouchableOpacity
-                onPress={() => {
-                  navigation.navigate("MyPlantDetail", { id: item.id })
-                }}>
-                <MyPlantHome item={item} />
-              </TouchableOpacity>
-            }
-            horizontal={true}
-            showsHorizontalScrollIndicator={false}
-            style={{
-              // flex:1, 
-              overflow: 'hidden',
-              marginBottom: 16,
-              paddingLeft: 16,
-              paddingRight: 16
-            }}
-          /> */}
-      {/* top container  */}
-      <View style={homeStyles.topContainer}>
-        <UserCard />
-        <View style={homeStyles.heroContainer}>
-          <Slider />
-        </View>
-        <View style={homeStyles.myPlantSectionContainer}>
-          <Text style={homeStyles.sectionTitle}>My Plant</Text>
-          <FlatList
-            data={myPlantData}
-            nestedScrollEnabled={true}
-            renderItem={({ item }) => (
-              <TouchableOpacity
-                onPress={() => {
-                  navigation.navigate("MyPlantDetail", { id: item.id });
-                }}>
-                <MyPlantHome item={item} />
-              </TouchableOpacity>
-            )}
-            horizontal={true}
-            showsHorizontalScrollIndicator={false}
-            style={{
-              // flex:1,
-              overflow: "hidden",
-              marginBottom: 16,
-              paddingLeft: 16,
-              paddingRight: 16,
-            }}
-          />
-        </View>
-      </View>
-      {/* bottom container  */}
-      <View style={homeStyles.bottomContainer}>
-        <Text style={homeStyles.sectionTitle}>Featured Threads</Text>
-        <FlatList
-          // data={threads}
-          data={threadsData}
-          renderItem={({ item }) => <ThreadHome item={item} />}
+    <>
+      {isLoading ? <Text> Loading </Text> :
+        <ScrollView
           style={{
-            // flex:1,
-            overflow: "hidden",
-            marginBottom: 16,
-            paddingLeft: 16,
-            paddingRight: 8,
+            flex: 1,
+            gap: 16,
+            backgroundColor: "#DEEAE5",
           }}
-          nestedScrollEnabled={true}
-        />
-      </View>
-    </ScrollView>
+          showsVerticalScrollIndicator={false}>
+          <Button
+            onPress={() => {
+              handleLogout();
+            }}
+            title="logout"
+            color="tomato"
+            accessibilityLabel="Submit button"
+          />
+          {/* <FlatList
+        data={myPlantData}
+        renderItem={({ item }) =>
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate("MyPlantDetail", { id: item.id })
+            }}>
+            <MyPlantHome item={item} />
+          </TouchableOpacity>
+        }
+        horizontal={true}
+        showsHorizontalScrollIndicator={false}
+        style={{
+          // flex:1, 
+          overflow: 'hidden',
+          marginBottom: 16,
+          paddingLeft: 16,
+          paddingRight: 16
+        }}
+      /> */}
+          {/* top container  */}
+          <View style={homeStyles.topContainer}>
+            <UserCard />
+            <View style={homeStyles.heroContainer}>
+              <Slider />
+            </View>
+            <View style={homeStyles.myPlantSectionContainer}>
+              <Text style={homeStyles.sectionTitle}>My Plant</Text>
+              <FlatList
+                data={userProfile?.MyPlants}
+                nestedScrollEnabled={true}
+                renderItem={({ item }) => (
+                  <TouchableOpacity
+                    onPress={() => {
+                      navigation.navigate("MyPlantDetail", { id: item.id });
+                    }}>
+                    <MyPlantHome item={item} />
+                  </TouchableOpacity>
+                )}
+                horizontal={true}
+                showsHorizontalScrollIndicator={false}
+                style={{
+                  // flex:1,
+                  overflow: "hidden",
+                  marginBottom: 16,
+                  paddingLeft: 16,
+                  paddingRight: 16,
+                }}
+              />
+            </View>
+          </View>
+          {/* bottom container  */}
+          <View style={homeStyles.bottomContainer}>
+            <Text style={homeStyles.sectionTitle}>Featured Threads</Text>
+            <FlatList
+              // data={threads}
+              data={threads}
+              renderItem={({ item }) => <ThreadHome item={item} />}
+              style={{
+                // flex:1,
+                overflow: "hidden",
+                marginBottom: 16,
+                paddingLeft: 16,
+                paddingRight: 8,
+              }}
+              nestedScrollEnabled={true}
+            />
+          </View>
+        </ScrollView>
+      }
+    </>
   );
 };
 

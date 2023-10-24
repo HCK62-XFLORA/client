@@ -1,9 +1,72 @@
 import { Image, StyleSheet, Text, View, Dimensions } from "react-native";
-import React from "react";
+import React, { useContext, useEffect, useState } from "react";
+import * as SecureStore from "expo-secure-store";
+import axios from "axios";
+import beginnerBadge from '../../assets/userBadges/badge-beginner.png'
+import advanceBadge from '../../assets/userBadges/badge-advance.png'
+import intermediateBadge from '../../assets/userBadges/badge-intermediate.png'
+import { UserContext } from "../stores/UserContext";
+
+
 
 const { height, width } = Dimensions.get('screen')
 
 const UserCard = () => {
+
+  // const [user, setUser] = useState([]);
+  // const [userData, setUserData] = useState(null);
+  const { userProfile } = useContext(UserContext);
+
+  console.log(userProfile, '<<<context');
+
+  const getBadge = () => {
+    // return advanceBadge
+    if (userProfile.badge === 'Beginner') return beginnerBadge
+    else if (userProfile.badge === 'Advance') return advanceBadge
+    else if (userProfile.badge === 'Intermediate') return intermediateBadge
+  }
+
+
+  // const getUser = async () => {
+  //   try {
+  //     const access_token = await SecureStore.getItemAsync("access_token");
+  //     const id = await SecureStore.getItemAsync("UserId");
+  //     console.log(
+  //       "🚀 ~ file: App.js:37 ~ getUser ~ access_token, id:",
+  //       access_token,
+  //       id
+  //     );
+  //     setUser({ access_token, id });
+  //     return id
+  //   } catch (error) {
+  //     console.log("🚀 ~ file: App.js:37 ~ getUser ~ error:", error);
+  //   }
+  // };
+
+  // const fetchUser = async () => {
+  //   try {
+  //     const { data } = await axios({
+  //       url: `https://wadinodev.com/users/profile/${user.id}`,
+  //       method: "GET",
+  //       headers: { access_token: user.access_token }
+  //     });
+  //     setUserData(data);
+  //     return data
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // }
+
+  // useEffect(() => {
+  //   getUser()
+  // }, []);
+
+  // useEffect(() => {
+  //   fetchUser()
+  // }, []);
+
+  // console.log(userData);
+
   return (
     <View style={{ flex: 1, flexDirection: 'row', width, justifyContent: "space-between", padding: 16 }}>
       <View style={styles.homeProfile}>
@@ -15,10 +78,10 @@ const UserCard = () => {
         />
         <View style={styles.frame}>
           <View style={styles.user}>
-            <Text style={styles.userText}>John Doe</Text>
+            <Text style={styles.userText}>{userProfile?.username}</Text>
           </View>
           <View style={styles.rank}>
-            <Text style={styles.rankText}>Intermediate</Text>
+            <Text style={styles.rankText}>{userProfile?.email}</Text>
           </View>
         </View>
       </View>
@@ -30,20 +93,22 @@ const UserCard = () => {
             source={require("../../assets/point-icon.png")}
           />
           <View style={styles.point}>
-            <Text style={styles.pointText}>100 Points</Text>
+            <Text style={styles.pointText}>{userProfile?.point} pts</Text>
           </View>
         </View>
         {/* badge */}
-        <View style={styles.pointContainer}>
-          <Image
-            style={styles.pointImage}
-            resizeMode="contain"
-            source={require("../../assets/beginner-icon.png")}
-          />
-          <View style={styles.point}>
-            <Text style={styles.pointText}>Beginner</Text>
+        {userProfile &&
+          <View style={styles.pointContainer}>
+            <Image
+              style={styles.pointImage}
+              resizeMode="contain"
+              source={getBadge()}
+            />
+            <View style={styles.point}>
+              <Text style={styles.pointText}>{userProfile?.badge}</Text>
+            </View>
           </View>
-        </View>
+        }
       </View>
 
     </View>

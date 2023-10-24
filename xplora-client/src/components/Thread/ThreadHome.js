@@ -5,13 +5,13 @@ const ThreadHome = ({ item }) => {
     // console.log(item);
     return (
         <View style={styles.container}>
-            <Image source={item.image}
+            <Image source={{uri: `${item.imgUrl}`}}
                 resizeMode="cover"
                 style={styles.image}
             />
             <View style={styles.textContainer}>
                 <Text style={styles.threadTitle}>{item.title}</Text>
-                <Text ellipsizeMode='tail' numberOfLines={2} style={styles.threadParagraph}>{item.description}</Text>
+                <Text ellipsizeMode='tail' numberOfLines={2} style={styles.threadParagraph}>{item?.content}</Text>
                 <Text style={styles.threadParagraph}>{item.category}</Text>
             </View>
         </View>

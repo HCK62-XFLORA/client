@@ -21,6 +21,8 @@ import React, { useEffect, useState } from "react";
 import * as SecureStore from "expo-secure-store";
 import AskAi from "./src/views/AskAi";
 import MyVoucher from "./src/views/MyVoucher";
+import axios from "axios";
+
 
 const Stack = createNativeStackNavigator();
 
@@ -31,6 +33,8 @@ export default function App() {
 
   // const user = React.useContext(UserContext);
   const [user, setUser] = useState(null);
+  // statee userData badge, level , point
+  const [userProfile, setUserProfile] = useState(null)
 
   const getUser = async () => {
     try {
@@ -38,20 +42,48 @@ export default function App() {
       const id = await SecureStore.getItemAsync("UserId");
       console.log(
         "🚀 ~ file: App.js:37 ~ getUser ~ access_token, id:",
-        id
+        id, access_token
       );
       setUser({ access_token, id });
     } catch (error) {
       console.log("🚀 ~ file: App.js:37 ~ getUser ~ error:", error);
     }
   };
+
+  const fetchUser = async () => {
+    try {
+      const { data } = await axios({
+        url: `https://wadinodev.com/users/profile/${user.id}`,
+        method: "GET",
+        headers: { access_token: user.access_token }
+      });
+      setUserProfile(data);
+      return data
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  console.log(userProfile, '<<<<appp');
+  console.log(user, '<<<appp');
+
+
   useEffect(() => {
     getUser()
   }, []);
 
+  useEffect(() => {
+    if (user) { fetchUser() }
+  }, [user])
+  /**
+   * berarti perlu ngefetch ke  buat isi   // statee userData badge, level , point
+     jika sudah login
+     useEffect(() => { if (user.accesstoken) { fetchBuat data badhe dll }}, [user])
+   */
+
   return (
     // <SafeAreaView>
-    <UserContext.Provider value={{ user, setUser }}>
+    <UserContext.Provider value={{ user, setUser, userProfile }}>
       <NavigationContainer>
         <Stack.Navigator>
           {!user ? (
