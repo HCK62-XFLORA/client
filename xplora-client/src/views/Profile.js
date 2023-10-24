@@ -1,7 +1,8 @@
-import { ScrollView, TouchableOpacity, StyleSheet, Text, View, Image, FlatList } from 'react-native'
-import React from 'react'
+import { ScrollView, TouchableOpacity, StyleSheet, Text, View, Image, FlatList, LogBox } from 'react-native'
+import React, { useContext } from 'react'
 import ThreadHome from '../components/Thread/ThreadHome'
 import MyPlantCard2 from '../components/MyPlant/MyPlantCard2'
+import { UserContext } from '../stores/UserContext'
 
 const myPlantData = [
   {
@@ -50,6 +51,7 @@ const threadsData = [
 ]
 
 const Profile = ({navigation}) => {
+  const { userProfile } = useContext(UserContext);
   return (
     <ScrollView
       style={styles.mainContainer}
@@ -62,8 +64,8 @@ const Profile = ({navigation}) => {
             source={require('../../assets/Profile/User-pict.png')}
           />
           <View>
-            <Text style={styles.userText}>John Doe</Text>
-            <Text style={styles.rankText}>johnDoe@mail.com</Text>
+            <Text style={styles.userText}>{userProfile?.username}</Text>
+            <Text style={styles.rankText}>{userProfile?.email}</Text>
           </View>
         </View>
         <Image
@@ -81,7 +83,7 @@ const Profile = ({navigation}) => {
               resizeMode="contain"
               source={require("../../assets/beginner-icon.png")}
             />
-            <Text style={styles.levelParagraph}>Beginner</Text>
+            <Text style={styles.levelParagraph}>{userProfile?.badge}</Text>
           </View>
         </View>
         <View style={styles.pointContentContainer}>
@@ -92,7 +94,7 @@ const Profile = ({navigation}) => {
               resizeMode="contain"
               source={require("../../assets/point-icon.png")}
             />
-            <Text style={styles.levelParagraph}>100pts</Text>
+            <Text style={styles.levelParagraph}>{userProfile?.point} pts</Text>
           </View>
         </View>
         <TouchableOpacity
@@ -114,7 +116,7 @@ const Profile = ({navigation}) => {
         <View style={{ gap: 8 }}>
           <Text style={styles.sectionTitle}>My Plant</Text>
           <FlatList
-            data={myPlantData}
+            data={userProfile?.MyPlants}
             renderItem={({ item }) =>
               <TouchableOpacity
                 onPress={() => {
@@ -137,7 +139,7 @@ const Profile = ({navigation}) => {
         </View>
         <Text style={styles.sectionTitle}>My Thread</Text>
         <FlatList
-          data={threadsData}
+          data={userProfile?.Threads}
           nestedScrollEnabled={true}
           renderItem={({ item }) =>
             <ThreadHome item={item} />

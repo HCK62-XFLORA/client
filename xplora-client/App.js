@@ -23,7 +23,6 @@ import AskAi from "./src/views/AskAi";
 import MyVoucher from "./src/views/MyVoucher";
 import axios from "axios";
 
-
 const Stack = createNativeStackNavigator();
 
 export default function App() {
@@ -34,7 +33,7 @@ export default function App() {
   // const user = React.useContext(UserContext);
   const [user, setUser] = useState(null);
   // statee userData badge, level , point
-  const [userProfile, setUserProfile] = useState(null)
+  const [userProfile, setUserProfile] = useState(null);
 
   const getUser = async () => {
     try {
@@ -43,7 +42,6 @@ export default function App() {
       if (access_token !== null && id !== null) {
         setUser({ access_token, id });
       }
-      setUser({ access_token, id });
     } catch (error) {
       console.log("🚀 ~ file: App.js:37 ~ getUser ~ error:", error);
     }
@@ -54,26 +52,24 @@ export default function App() {
       const { data } = await axios({
         url: `https://wadinodev.com/users/profile/${user.id}`,
         method: "GET",
-        headers: { access_token: user.access_token }
+        headers: { access_token: user.access_token },
       });
       setUserProfile(data);
-      return data
+      return data;
     } catch (error) {
       console.log(error);
     }
-  }
-
-  // console.log(userProfile, '<<<<appp');
-  // console.log(user, '<<<appp');
-
+  };
 
   useEffect(() => {
-    getUser()
+    getUser();
   }, []);
 
   useEffect(() => {
-    if (user) { fetchUser() }
-  }, [user])
+    if (user) {
+      fetchUser();
+    }
+  }, [user]);
   /**
    * berarti perlu ngefetch ke  buat isi   // statee userData badge, level , point
      jika sudah login
@@ -110,31 +106,6 @@ export default function App() {
         </Stack.Navigator>
       </NavigationContainer>
     </UserContext.Provider>
-    //  </SafeAreaView>
-    // <NavigationContainer>
-    //   <Stack.Navigator
-    //   // screenOptions={{
-    //   //   headerShown: false
-    //   // }}
-    //   >
-    //     <Stack.Screen
-    //       name="GetStarted"
-    //       component={GetStarted}
-    //       options={{ headerShown: false }}
-    //     />
-    //     <Stack.Screen name="Login" component={Login} />
-    //     <Stack.Screen name="Register" component={Register} />
-    //     {/* <Stack.Screen name="ImagePicker" component={ImagePickerExample} /> */}
-    //     <Stack.Screen name="AddThreads" component={AddThreads} />
-    //     <Stack.Screen name="ThreadDetail" component={ThreadDetail} />
-    //     <Stack.Screen name="AddMyPlant" component={AddMyPlant} />
-    //     <Stack.Screen name="MyPlantDetail" component={MyPlantDetail} />
-    //     <Stack.Screen name="TabNavigator" component={TabNavigator} />
-    //     <Stack.Screen name="AskAi" component={AskAi} />
-    //     <Stack.Screen name="MyVoucher" component={MyVoucher} />
-    //   </Stack.Navigator>
-    // </NavigationContainer>
-    // // </SafeAreaView>
   );
 }
 

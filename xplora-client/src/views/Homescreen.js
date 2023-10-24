@@ -12,30 +12,11 @@ import UserCard from "../components/UserCard";
 import Slider from "../components/Promo/Slider";
 import MyPlantHome from "../components/MyPlant/MyPlantHome";
 import ThreadHome from "../components/Thread/ThreadHome";
-// import {Karla_600SemiBold} from '@expo-google-fonts/karla'
 import { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import * as SecureStore from "expo-secure-store";
 import { UserContext } from "../stores/UserContext";
 
-// const myPlantData = [
-//   {
-//     image: require("../../assets/MyPlantCard/card1.png"),
-//     text: "My Plant 1",
-//   },
-//   {
-//     image: require("../../assets/MyPlantCard/card2.png"),
-//     text: "My Plant 2",
-//   },
-//   {
-//     image: require("../../assets/MyPlantCard/card3.png"),
-//     text: "My Plant 3",
-//   },
-//   {
-//     image: require("../../assets/MyPlantCard/card2.png"),
-//     text: "My Plant 2",
-//   },
-// ];
 
 const threadsData = [
   {
@@ -73,10 +54,7 @@ const Homescreen = ({ navigation }) => {
   const [threads, setThreads] = useState([]);
   const [plants, setPlants] = useState([]);
 
-
   const { user, userProfile, setUser } = useContext(UserContext);
-
-  console.log(userProfile, '<<<userHome Screen');
 
   const fetchThreads = async () => {
     try {
@@ -86,7 +64,7 @@ const Homescreen = ({ navigation }) => {
         headers: { access_token: user.access_token }
       });
       setThreads(data);
-      return data
+      return data;
     } catch (error) {
       console.error(error);
     } finally {
@@ -94,37 +72,28 @@ const Homescreen = ({ navigation }) => {
     }
   };
 
-
-
   const fetchPlants = async () => {
     try {
       const { data } = await axios({
         url: "https://wadinodev.com/users/my-plant",
         method: "GET",
-        headers: { access_token: user.access_token }
+        headers: { access_token: user.access_token },
       });
       setPlants(data);
-      return data
+      return data;
     } catch (error) {
       console.log(error);
     }
-  }
+  };
 
   const getUser = async () => {
     try {
       const access_token = await SecureStore.getItemAsync("access_token");
       const id = await SecureStore.getItemAsync("UserId");
-      console.log(access_token, id, '[[[[[[[inilohhhhhhh');
-      // console.log(
-      //   "🚀 ~ file: App.js:37 ~ getUser ~ access_token, id:",
-      //   access_token,
-      //   id
-      // );
-      // setUser({ access_token, id });
       return {
         access_token,
-        id
-      }
+        id,
+      };
     } catch (error) {
       console.log("🚀 ~ file: App.js:37 ~ getUser ~ error:", error);
     }
@@ -141,49 +110,15 @@ const Homescreen = ({ navigation }) => {
     }
   };
 
-  // useEffect(() => {
-  //   // getUser()
-  //   //   .then(({ access_token }) => {
-  //   //     return fetchPlants(access_token)
-  //   //   })
-  //   //   .then(() => {
-  //   //     return fetchThreads()
-  //   //   })
-  //   //   .finally(() => {
-  //   //     setLoading(false)
-  //   //   })
-  //   //   .catch((err) => console.log(err, "here"))
-  //   fetchPlants()
-  //     .then(() => {
-  //       fetchThreads()
-  //     })
-  //     .finally(() => {
-  //       setLoading(false)
-  //     })
-
-  // }, []);
-
   useEffect(() => {
-    fetchThreads()
-  }, [])
-
-  // useEffect(() => {
-  //   fetchPlants();
-  // }, []);
-
-  // useEffect(() => {
-  //   getUser();
-  // }, []);
-
-  // console.log(threads, '<<<<');
-  // console.log(user, '<<<<');
-  // console.log(plants[0].Plant.name, '<<<<');
-  // console.log(plants, '<<<<honeee');
-
+    fetchThreads();
+  }, []);
 
   return (
     <>
-      {isLoading ? <Text> Loading </Text> :
+      {isLoading ? (
+        <Text> Loading </Text>
+      ) : (
         <ScrollView
           style={{
             flex: 1,
@@ -268,7 +203,7 @@ const Homescreen = ({ navigation }) => {
             />
           </View>
         </ScrollView>
-      }
+      )}
     </>
   );
 };
