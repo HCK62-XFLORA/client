@@ -69,9 +69,11 @@ export default function App() {
               <Stack.Screen name="TabNavigator" component={TabNavigator} />
               {/* <Stack.Screen name="ImagePicker" component={ImagePickerExample} /> */}
               <Stack.Screen name="AddThreads" component={AddThreads} />
+              <Stack.Screen name="AskAi" component={AskAi} />
               <Stack.Screen name="ThreadDetail" component={ThreadDetail} />
               <Stack.Screen name="AddMyPlant" component={AddMyPlant} />
               <Stack.Screen name="MyPlantDetail" component={MyPlantDetail} />
+              <Stack.Screen name="MyVoucher" component={MyVoucher} />
             </>
           )}
         </Stack.Navigator>
