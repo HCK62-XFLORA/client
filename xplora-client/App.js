@@ -19,6 +19,8 @@ import ImagePickerExample from "./src/components/Photos/ImagePicker";
 import { UserContext } from "./src/stores/UserContext";
 import React, { useEffect, useState } from "react";
 import * as SecureStore from "expo-secure-store";
+import AskAi from "./src/views/AskAi";
+import MyVoucher from "./src/views/MyVoucher";
 
 const Stack = createNativeStackNavigator();
 
@@ -76,6 +78,30 @@ export default function App() {
       </NavigationContainer>
     </UserContext.Provider>
     //  </SafeAreaView>
+    // <NavigationContainer>
+    //   <Stack.Navigator
+    //   // screenOptions={{
+    //   //   headerShown: false
+    //   // }}
+    //   >
+    //     <Stack.Screen
+    //       name="GetStarted"
+    //       component={GetStarted}
+    //       options={{ headerShown: false }}
+    //     />
+    //     <Stack.Screen name="Login" component={Login} />
+    //     <Stack.Screen name="Register" component={Register} />
+    //     {/* <Stack.Screen name="ImagePicker" component={ImagePickerExample} /> */}
+    //     <Stack.Screen name="AddThreads" component={AddThreads} />
+    //     <Stack.Screen name="ThreadDetail" component={ThreadDetail} />
+    //     <Stack.Screen name="AddMyPlant" component={AddMyPlant} />
+    //     <Stack.Screen name="MyPlantDetail" component={MyPlantDetail} />
+    //     <Stack.Screen name="TabNavigator" component={TabNavigator} />
+    //     <Stack.Screen name="AskAi" component={AskAi} />
+    //     <Stack.Screen name="MyVoucher" component={MyVoucher} />
+    //   </Stack.Navigator>
+    // </NavigationContainer>
+    // // </SafeAreaView>
   );
 }
 
