@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import {
   Button,
   Image,
@@ -19,6 +19,9 @@ import {
 import VoucherCard from "../components/VoucherCard";
 import * as SecureStore from "expo-secure-store";
 import axios from "axios";
+import { UserContext } from "../stores/UserContext";
+
+const BASE_URL = `https://wadinodev.com`;
 
 const Login = ({ navigation }) => {
   const [email, setEmail] = React.useState("");
@@ -27,31 +30,21 @@ const Login = ({ navigation }) => {
 
   const [showPassword, setShowPassword] = React.useState(false);
 
-  const handleLogin = async () => {
+  const { user, setUser } = useContext(UserContext);
+
+  const handleLogin = async (email, password) => {
     try {
       const { data } = await axios({
-        url: BASE_URL + "/login",
         method: "POST",
+        url: BASE_URL + "/users/login",
         data: { email, password },
       });
-      console.log("🚀 ~ file: Login.js:40 ~ handleLogin ~ data:", data)
-      // await SecureStore.setItemAsync("access_token", data.access_token); // data harus string
-      //! user id email
-      // await SecureStore.setItemAsync("access_token", data.UserId); // data harus string
-      //! rubah nilai contextnya kalo di redux nge dispatch action
-      // navigation.navigate("TabNavigator");
+      const access_token = await SecureStore.setItemAsync("access_token",data.access_token);
+      const id = await SecureStore.setItemAsync("UserId", toString(data.id));
+      // rubah nilai contextnya kalo di redux nge dispatch action
+      setUser({ access_token, id });
     } catch (error) {
       console.error(error);
-      Alert.alert("Alert Title", error, [
-        {
-          text: "Cancel",
-          onPress: () => console.log("Cancel Pressed"),
-          style: "cancel",
-        },
-        { text: "OK", onPress: () => console.log("OK Pressed") },
-      ]);
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -110,7 +103,7 @@ const Login = ({ navigation }) => {
         <View style={styles.buttonContainer}>
           <TouchableOpacity
             style={styles.button}
-            onPress={() => navigation.navigate("TabNavigator")}>
+            onPress={() => handleLogin(email, password)}>
             <Text style={styles.buttonText}>Let's go!</Text>
           </TouchableOpacity>
         </View>

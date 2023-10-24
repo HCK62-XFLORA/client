@@ -5,6 +5,7 @@ import {
   Text,
   View,
   ScrollView,
+  Button,
 } from "react-native";
 import NavBottomActive from "../components/NavBottom/NavBottom-active";
 import UserCard from "../components/UserCard";
@@ -12,8 +13,10 @@ import Slider from "../components/Promo/Slider";
 import MyPlantHome from "../components/MyPlant/MyPlantHome";
 import ThreadHome from "../components/Thread/ThreadHome";
 // import {Karla_600SemiBold} from '@expo-google-fonts/karla'
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import axios from "axios";
+import * as SecureStore from "expo-secure-store";
+import { UserContext } from "../stores/UserContext";
 
 const myPlantData = [
   {
@@ -69,6 +72,8 @@ const Homescreen = ({ navigation }) => {
   const [isLoading, setLoading] = useState(true);
   const [threads, setThreads] = useState("");
 
+  const { user, setUser } = useContext(UserContext);
+
   const fetchThreads = async () => {
     try {
       const { data } = await axios({
@@ -80,6 +85,31 @@ const Homescreen = ({ navigation }) => {
       console.error(error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const getUser = async () => {
+    try {
+      const access_token = await SecureStore.getItemAsync("access_token");
+      const id = await SecureStore.getItemAsync("UserId");
+      console.log(
+        "🚀 ~ file: App.js:37 ~ getUser ~ access_token, id:",
+        access_token,
+        id
+      );
+      setUser({ access_token, id });
+    } catch (error) {
+      console.log("🚀 ~ file: App.js:37 ~ getUser ~ error:", error);
+    }
+  };
+
+  const handleLogout = async () => {
+    try {
+      const access_token = await SecureStore.deleteItemAsync("access_token");
+      const id = await SecureStore.deleteItemAsync("UserId");
+      setUser(null);
+    } catch (error) {
+      console.log("🚀 ~ file: App.js:37 ~ getUser ~ error:", error);
     }
   };
 
@@ -95,6 +125,14 @@ const Homescreen = ({ navigation }) => {
         backgroundColor: "#DEEAE5",
       }}
       showsVerticalScrollIndicator={false}>
+      <Button
+        onPress={() => {
+          handleLogout();
+        }}
+        title="logout"
+        color="tomato"
+        accessibilityLabel="Submit button"
+      />
       {/* <FlatList
             data={myPlantData}
             renderItem={({ item }) =>
