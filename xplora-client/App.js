@@ -40,10 +40,9 @@ export default function App() {
     try {
       const access_token = await SecureStore.getItemAsync("access_token");
       const id = await SecureStore.getItemAsync("UserId");
-      console.log(
-        "🚀 ~ file: App.js:37 ~ getUser ~ access_token, id:",
-        id, access_token
-      );
+      if (access_token !== null && id !== null) {
+        setUser({ access_token, id });
+      }
       setUser({ access_token, id });
     } catch (error) {
       console.log("🚀 ~ file: App.js:37 ~ getUser ~ error:", error);
@@ -64,8 +63,8 @@ export default function App() {
     }
   }
 
-  console.log(userProfile, '<<<<appp');
-  console.log(user, '<<<appp');
+  // console.log(userProfile, '<<<<appp');
+  // console.log(user, '<<<appp');
 
 
   useEffect(() => {

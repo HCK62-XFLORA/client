@@ -1,15 +1,81 @@
 import React, { useState } from 'react';
 import { View, Dimensions, FlatList, Text, TextInput, TouchableOpacity, Image, StyleSheet } from 'react-native';
-
+import axios from 'axios';
+import { generateResponse } from '../helpers/ChatGPT';
 const { width, height } = Dimensions.get('screen')
 
 const ChatRoom = () => {
+
+    // const OpenAI = require("openai");
+
+    // const openai = new OpenAI({
+    //     apiKey: "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", // defaults to process.env["OPENAI_API_KEY"]
+    // });
+
+
+    // const instance = axios({
+    //     baseURL: 'https://api.openai.com/v1/engines/davinci-codex/completions',
+    //     headers: {
+    //         'Content-Type': 'application/json',
+    //         'Authorization': `Bearer ${OPENAI_KEY}`
+    //     }
+    // });
+
     const [text, setText] = useState('');
     const [messages, setMessages] = useState([]);
 
-    const sendMessage = () => {
+    // const chatGpt = axios.create({
+    //         url: "https://api.openai.com/v1/engines/davinci-codex/completions",
+    //         headers: {
+    //             'Content-Type': 'application/json',
+    //             'Authorization': `Bearer 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`
+    //         }
+    //     });
+
+    //  const generateResponse = async (messages) => {
+    //     try {
+    //       const response = await chatGpt.post('', {
+    //         prompt: messages,
+    //         max_tokens: 60
+    //       });
+    //       return response.data.choices[0].text;
+    //     } catch (error) {
+    //       console.error(error);
+    //       return '';
+    //     }
+    //   }
+
+    // export const generateResponse = async (message) => {
+    //     try {
+    //         const response = await instance.post('', {
+    //             prompt: message,
+    //             max_tokens: 60
+    //         });
+    //         return response.data.choices[0].text;
+    //     } catch (error) {
+    //         console.error(error);
+    //         return '';
+    //     }
+    // };
+
+    // import { generateResponse } from './ChatGPTService';
+
+    // // ...previous code
+    
+    // const sendMessage = async () => {
+    //   if (!userInput) return;
+    
+    //   setMessages(prevMessages => [...prevMessages, `User: ${userInput}`]);
+    //   const botResponse = await generateResponse(userInput);
+    //   setMessages(prevMessages => [...prevMessages, `ChatGPT: ${botResponse}`]);
+    //   setUserInput('');
+    // };
+  
+    const sendMessage = async () => {
         if (text) {
             setMessages([...messages, { text, id: messages.length }]);
+            const botResponse = await generateResponse(text)
+            setMessages([...messages, { text, id: messages.length }])
             setText('');
         }
     };
@@ -18,7 +84,7 @@ const ChatRoom = () => {
         <View style={styles.mainContainer}>
             <FlatList
                 data={messages}
-                keyExtractor={(item) => item.id.toString()}
+                // keyExtractor={(item) => item.id.toString()}
                 renderItem={({ item }) => (
                     <View style={styles.messageContainer}>
                         <Text style={styles.messageText}>{item.text}</Text>

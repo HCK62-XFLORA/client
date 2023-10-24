@@ -5,11 +5,11 @@ const MyPlantHome = ({ item }) => {
     // console.log(item, '<<<');
     return (
         <View style={styles.container}>
-            <Image source={item.image}
+            <Image source={{ uri: `${item.imgUrl}` }}
                 resizeMode="cover"
                 style={styles.image}
             />
-            <Text>{item.text}</Text>
+            <Text>{item?.Plant?.name}</Text>
         </View>
     )
 }

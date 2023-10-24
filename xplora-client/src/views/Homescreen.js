@@ -81,8 +81,9 @@ const Homescreen = ({ navigation }) => {
   const fetchThreads = async () => {
     try {
       const { data } = await axios({
-        url: "https://wadinodev.com/threads?nthThreads=1&ForumId=",
+        url: "https://wadinodev.com/threads?nthThreads=1",
         method: "GET",
+        headers: { access_token: user.access_token }
       });
       setThreads(data);
       return data
@@ -132,6 +133,7 @@ const Homescreen = ({ navigation }) => {
   const handleLogout = async () => {
     try {
       const access_token = await SecureStore.deleteItemAsync("access_token");
+      const deleteId = await SecureStore.deleteItemAsync("id");
       const id = await SecureStore.deleteItemAsync("UserId");
       setUser(null);
     } catch (error) {

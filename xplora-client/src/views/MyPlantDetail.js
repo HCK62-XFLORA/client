@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View, Dimensions, Image, TouchableOpacity } from 'react-native'
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { useRoute } from '@react-navigation/native';
 import {
     useFonts,
@@ -10,6 +10,8 @@ import {
 } from "@expo-google-fonts/karla";
 import ThirdButton from '../components/Buttons/ThirdButton';
 import * as ImagePicker from 'expo-image-picker';
+import axios from 'axios'
+import { UserContext } from '../stores/UserContext';
 
 
 const { width } = Dimensions.get('screen')
@@ -19,27 +21,64 @@ const { width } = Dimensions.get('screen')
 const MyPlantDetail = ({ navigation }) => {
     const route = useRoute()
     const id = route.params.id
+    const { user } = useContext(UserContext);
+    
 
+    // console.log(id, '<<<myplant');
     //   const [image, setImage] = useState(null);
 
-    let formData = new FormData()
+    const fetchPlantById = async () => {
+        try {
+            const { data } = await axios({
+                url: "https://wadinodev.com/users/my-plants/",
+                method: "GET",
+            });
+            setThreads(data);
+            return data
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+
 
 
     const pickImage = async () => {
-        // No permissions request is necessary for launching the image library
-        let result = await ImagePicker.launchImageLibraryAsync({
-            mediaTypes: ImagePicker.MediaTypeOptions.All,
-            allowsEditing: true,
-            aspect: [4, 3],
-            quality: 1,
-        });
+        try {
+            let result = await ImagePicker.launchImageLibraryAsync({
+                mediaTypes: ImagePicker.MediaTypeOptions.All,
+                allowsEditing: true,
+                aspect: [4, 3],
+                quality: 1,
+            });
+            let localUri = result.uri;
+            let filename = localUri.split('/').pop();
 
-        console.log(result.uri);
-        formData.append('image', { uri: result.uri })
+            // Infer the type of the image
+            let match = /\.(\w+)$/.exec(filename);
+            let type = match ? `image/${match[1]}` : `image`;
+            const formData = new FormData()
+            console.log(result.uri);
+            formData.append('image', { uri: result.uri, name: filename, type })
+            const { data } = await axios({
+                url: "https://wadinodev.com/users/predict",
+                method: "post",
+                headers: {
+                    access_token: user.access_token,
+                    "Content-Type": 'multipart/form-data'
+                },
+                data: formData
+            })
 
-        if (!result.canceled) {
-            setImage(result.assets[0].uri);
+            console.log(data, '<<<<<<data predict');
+            if (!result.canceled) {
+                setImage(result.assets[0].uri);
+            }
+        } catch (error) {
+            console.log(error, '<<<predicr');
         }
+        // No permissions request is necessary for launching the image library
+
     };
 
 

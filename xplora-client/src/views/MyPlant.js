@@ -1,8 +1,9 @@
 import { StyleSheet, Text, View, ScrollView, Image, FlatList, Dimensions, TouchableOpacity } from 'react-native'
-import React from 'react'
+import React, { useContext } from 'react'
 import { Button } from 'react-native-paper'
 import MyPlantCard2 from '../components/MyPlant/MyPlantCard2'
 import { AntDesign } from '@expo/vector-icons';
+import { UserContext } from '../stores/UserContext';
 
 const myPlantData = [
   {
@@ -50,6 +51,11 @@ const myPlantData = [
 const { height } = Dimensions.get('screen')
 
 const MyPlan = ({ navigation }) => {
+  const { userProfile } = useContext(UserContext);
+
+  // console.log(userProfile, '<<<<myPlant');
+
+
   return (
     <ScrollView
       style={styles.mainContainer}
@@ -64,7 +70,7 @@ const MyPlan = ({ navigation }) => {
               source={require('../../assets/icons/Myplant-icon.png')}
               resizeMethod='contain'
             />
-            <Text style={styles.rankText}>{myPlantData.length} plants</Text>
+            <Text style={styles.rankText}>{userProfile?.MyPlants.length} plants</Text>
           </View>
           <Button
             style={styles.addPlantButton}
@@ -92,7 +98,7 @@ const MyPlan = ({ navigation }) => {
         <View style={{ gap: 8 }}>
           <Text style={styles.sectionTitle}>My Plant</Text>
           <FlatList
-            data={myPlantData}
+            data={userProfile?.MyPlants}
             renderItem={({ item }) =>
               // <MyPlantCard2 item={item} />
               <TouchableOpacity
@@ -112,7 +118,7 @@ const MyPlan = ({ navigation }) => {
               marginBottom: 16,
               paddingLeft: 16,
               paddingRight: 16,
-              alignSelf:'center'
+              alignSelf: 'center'
               // alignContent: 'space-between'
             }}
           />
@@ -197,6 +203,7 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 10,
     borderTopRightRadius: 10,
     gap: 8,
+    minHeight: height * 0.6
     // height: height * 0.6,
   },
   sectionTitle: {

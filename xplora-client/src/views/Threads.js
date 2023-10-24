@@ -1,7 +1,9 @@
 import { StyleSheet, Text, View, FlatList, ScrollView, TouchableOpacity, Image, Dimensions } from 'react-native'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import UserCard from '../components/UserCard'
 import ThreadHome from '../components/Thread/ThreadHome'
+import axios from "axios";
+
 
 const threadsData = [
   {
@@ -60,6 +62,30 @@ const categories = [
 const { width, height } = Dimensions.get('screen')
 
 const Threads = ({ navigation }) => {
+  const [threads, setThreads] = useState([]);
+
+  const fetchThreads = async () => {
+    try {
+      const { data } = await axios({
+        url: "https://wadinodev.com/threads?nthThreads=1&ForumId=",
+        method: "GET",
+        headers: { access_token: user.access_token }
+      });
+      setThreads(data);
+      return data
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchThreads()
+  }, [])
+
+  // console.log(threads, '<<<<');
+
   return (
     <ScrollView
 
@@ -115,7 +141,7 @@ const Threads = ({ navigation }) => {
         />
         <Text style={styles.sectionTitle}>Featured Threads</Text>
         <FlatList
-          data={threadsData}
+          data={threads}
           renderItem={({ item }) =>
             <TouchableOpacity
               onPress={() => {
