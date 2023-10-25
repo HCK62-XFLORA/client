@@ -2,7 +2,7 @@ import { StyleSheet, Text, View, Image } from 'react-native'
 import React from 'react'
 
 const MyPlantHome = ({ item }) => {
-    console.log(item, '<<<');
+    // console.log(item, '<<<');
     return (
         <View style={styles.container}>
             <Image source={{ uri: `${item.imgUrl}` }}

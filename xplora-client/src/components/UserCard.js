@@ -17,7 +17,7 @@ const UserCard = () => {
   // const [userData, setUserData] = useState(null);
   const { userProfile } = useContext(UserContext);
 
-  console.log(userProfile, '<<<context');
+  // console.log(userProfile, '<<<context');
 
   const getBadge = () => {
     // return advanceBadge
@@ -81,7 +81,7 @@ const UserCard = () => {
             <Text style={styles.userText}>{userProfile?.username}</Text>
           </View>
           <View style={styles.rank}>
-            <Text style={styles.rankText}>{userProfile?.email}</Text>
+            <Text ellipsizeMode='tail' numberOfLines={1} style={styles.rankText}>{userProfile?.email}</Text>
           </View>
         </View>
       </View>

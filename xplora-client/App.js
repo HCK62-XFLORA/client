@@ -22,7 +22,7 @@ import * as SecureStore from "expo-secure-store";
 import AskAi from "./src/views/AskAi";
 import MyVoucher from "./src/views/MyVoucher";
 import axios from "axios";
-
+import PromoDetail from "./src/views/PromoDetail";
 
 const Stack = createNativeStackNavigator();
 
@@ -43,7 +43,7 @@ export default function App() {
       if (access_token !== null && id !== null) {
         setUser({ access_token, id });
       }
-      setUser({ access_token, id });
+      // setUser({ access_token, id });
     } catch (error) {
       console.log("🚀 ~ file: App.js:37 ~ getUser ~ error:", error);
     }
@@ -105,6 +105,13 @@ export default function App() {
               <Stack.Screen name="AddMyPlant" component={AddMyPlant} />
               <Stack.Screen name="MyPlantDetail" component={MyPlantDetail} />
               <Stack.Screen name="MyVoucher" component={MyVoucher} />
+              <Stack.Screen 
+              name="PromoDetail" component={PromoDetail}
+              options={{
+                headerShown: false, 
+                mode: "modal", 
+              }}
+              />
             </>
           )}
         </Stack.Navigator>

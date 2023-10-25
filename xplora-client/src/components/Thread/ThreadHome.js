@@ -2,7 +2,13 @@ import { StyleSheet, Text, View, Image } from 'react-native'
 import React from 'react'
 
 const ThreadHome = ({ item }) => {
-    // console.log(item, '<<<thread card');
+    // console.log(item.ForumId, '<<<thread card');
+    const getCategory = () => {
+        if(item.ForumId == 1) return 'Tips n tricks'
+        if(item.ForumId == 2) return 'Disease'
+        if(item.ForumId == 3) return 'Stories'
+      }
+
     return (
         <View style={styles.container}>
             <Image source={{uri: `${item.imgUrl}`}}
@@ -10,9 +16,9 @@ const ThreadHome = ({ item }) => {
                 style={styles.image}
             />
             <View style={styles.textContainer}>
-                <Text style={styles.threadTitle}>{item.title}</Text>
+                <Text ellipsizeMode='tail' numberOfLines={1} style={styles.threadTitle}>{item.title}</Text>
                 <Text ellipsizeMode='tail' numberOfLines={2} style={styles.threadParagraph}>{item?.content}</Text>
-                <Text style={styles.threadParagraph}>{item.category}</Text>
+                <Text style={styles.threadParagraph}>{getCategory()}</Text>
             </View>
         </View>
     )
