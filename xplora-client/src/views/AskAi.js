@@ -1,11 +1,19 @@
-import React, { useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { View, Dimensions, FlatList, Text, TextInput, TouchableOpacity, Image, StyleSheet } from 'react-native';
 import axios from 'axios';
 import { generateResponse } from '../helpers/ChatGPT';
+import { useRoute } from '@react-navigation/native';
+import { UserContext } from '../stores/UserContext';
 const { width, height } = Dimensions.get('screen')
 
 const ChatRoom = () => {
 
+    const route = useRoute();
+    // const { questionAi } = route.params;
+    // console.log(route, '<<askAi');
+    const { user } = useContext(UserContext);
+
+    // console.log(questionAi, '<<<<askAi');
     // const OpenAI = require("openai");
 
     // const openai = new OpenAI({
@@ -23,6 +31,8 @@ const ChatRoom = () => {
 
     const [text, setText] = useState('');
     const [messages, setMessages] = useState([]);
+
+    console.log(messages.length, '<<<<length message');
 
     // const chatGpt = axios.create({
     //         url: "https://api.openai.com/v1/engines/davinci-codex/completions",
@@ -73,31 +83,60 @@ const ChatRoom = () => {
 
     const sendMessage = async () => {
         if (text) {
-            setMessages([...messages, { text, id: messages.length }]);
+            setMessages((prev) => {
+                // console.log(prev.length, "<-- user nanya")
+                return [...prev, { text, id: prev.length, type: "question" }, 
+                // {
+                //     text: "lagiapakek", id: prev.length + 1, type: "answer"
+                // }
+            ]
+            });
             const botResponse = await generateResponseFromChatGPT(text);
-            setMessages([...messages, { text: botResponse, id: messages.length }]);
+            // console.log(botResponse, '<<<<respon');
+            const res = botResponse[0].message.content
+            setMessages((prev) => {
+                // prev nya dihilangin object yang terakhir
+                // console.log(prev.length, "<--- dijawab bot")
+                return [...prev, { text: res, id: prev.length, type: "answer" }]
+            }); 
             setText('');
         }
     };
 
     const generateResponseFromChatGPT = async (userInput) => {
         try {
-            const response = await axios.post('https://api.openai.com/v1/engines/chat/completions', {
-                prompt: userInput,
-                max_tokens: 60
-            }, {
-                headers: {
-                    'Authorization': `Bearer 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`, // Replace with your actual API key
-                    'Content-Type': 'application/json'
-                }
-            });
+            // const response = await axios.post('https://wadinodev.com/threads/ask', {
+            //     prompt: userInput,
+            //     max_tokens: 60
+            // }, {
+            //     headers: {
+            //         'Authorization': `Bearer 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`, // Replace with your actual API key
+            //         'Content-Type': 'application/json'
+            //     }
+            // });
 
-            return response.data.choices[0].text;
+            // return response.data.choices[0].text;
+            const { data } = await axios({
+                url: `https://wadinodev.com/threads/ask`,
+                headers: { access_token: user.access_token },
+                method: 'POST',
+                data: { questionType: 'masalah', message: userInput }
+            })
+            return data
+
         } catch (error) {
             console.error(error);
             return 'Error occurred while fetching a response.';
         }
     };
+
+    useEffect(() => {
+        if (route.params) {
+            const { questionAi } = route.params;
+            // console.log(route, '<<askAi');
+            setText(questionAi)
+        }
+    }, [route])
 
     return (
         <View style={styles.mainContainer}>
@@ -105,8 +144,8 @@ const ChatRoom = () => {
                 data={messages}
                 // keyExtractor={(item) => item.id.toString()}
                 renderItem={({ item }) => (
-                    <View style={item.type === 'user' ? styles.userMessageContainer : styles.botMessageContainer}>
-                        <Text style={item.type === 'user' ? styles.userMessageText : styles.botMessageText}>{item.text}</Text>
+                    <View style={item.type === 'question' ? styles.userMessageContainer : styles.botMessageContainer}>
+                        <Text style={item.type === 'answer' ? styles.userMessageText : styles.botMessageText}>{item.text}</Text>
                     </View>
                 )}
             />

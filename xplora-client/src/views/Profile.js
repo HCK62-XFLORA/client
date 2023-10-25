@@ -1,20 +1,85 @@
-import {
-  ScrollView,
-  TouchableOpacity,
-  StyleSheet,
-  Text,
-  View,
-  Image,
-  FlatList,
-  LogBox,
-} from "react-native";
-import React, { useContext } from "react";
-import ThreadHome from "../components/Thread/ThreadHome";
-import MyPlantCard2 from "../components/MyPlant/MyPlantCard2";
-import { UserContext } from "../stores/UserContext";
 
-const Profile = ({ navigation }) => {
-  const { userProfile } = useContext(UserContext);
+import { ScrollView, TouchableOpacity, StyleSheet, Text, View, Image, FlatList, LogBox } from 'react-native'
+import React, { useContext } from 'react'
+import ThreadHome from '../components/Thread/ThreadHome'
+import MyPlantCard2 from '../components/MyPlant/MyPlantCard2'
+import { UserContext } from '../stores/UserContext'
+import { AntDesign } from '@expo/vector-icons';
+import { SimpleLineIcons } from '@expo/vector-icons';
+import { Button } from 'react-native-paper'
+import beginnerBadge from '../../assets/userBadges/badge-beginner.png'
+import advanceBadge from '../../assets/userBadges/badge-advance.png'
+import intermediateBadge from '../../assets/userBadges/badge-intermediate.png'
+import * as SecureStore from "expo-secure-store";
+
+
+
+const myPlantData = [
+  {
+    image: require('../../assets/MyPlantCard/card1.png'),
+    text: 'My Plant 1'
+  },
+  {
+    image: require('../../assets/MyPlantCard/card2.png'),
+    text: 'My Plant 2'
+  },
+  {
+    image: require('../../assets/MyPlantCard/card3.png'),
+    text: 'My Plant 3'
+  },
+  {
+    image: require('../../assets/MyPlantCard/card2.png'),
+    text: 'My Plant 2'
+  },
+]
+
+const threadsData = [
+  {
+    image: require('../../assets/MyPlantCard/card1.png'),
+    title: 'My Plant 1',
+    description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla fermentum odio id ',
+    category: 'Disease'
+  },
+  {
+    image: require('../../assets/MyPlantCard/card2.png'),
+    title: 'My Plant 2',
+    description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla fermentum odio id ',
+    category: 'Story'
+  },
+  {
+    image: require('../../assets/MyPlantCard/card3.png'),
+    title: 'My Plant 3',
+    description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla fermentum odio id ',
+    category: 'Tips & Trick'
+  },
+  {
+    image: require('../../assets/MyPlantCard/card2.png'),
+    title: 'My Plant 2',
+    description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla fermentum odio id ',
+    category: 'Story'
+  },
+]
+
+const Profile = ({navigation}) => {
+  const { userProfile, setUser } = useContext(UserContext);
+  const getBadge = () => {
+    // return advanceBadge
+    if (userProfile.badge === 'Beginner') return beginnerBadge
+    else if (userProfile.badge === 'Expert') return advanceBadge
+    else if (userProfile.badge === 'Intermediate') return intermediateBadge
+  }
+
+  const handleLogout = async () => {
+    try {
+      const access_token = await SecureStore.deleteItemAsync("access_token");
+      const deleteId = await SecureStore.deleteItemAsync("id");
+      // const id = await SecureStore.deleteItemAsync("UserId");
+      setUser(null);
+    } catch (error) {
+      console.log("🚀 ~ file: App.js:37 ~ getUser ~ error:", error);
+    }
+  };
+
   return (
     <ScrollView
       style={styles.mainContainer}
@@ -28,6 +93,30 @@ const Profile = ({ navigation }) => {
           <View>
             <Text style={styles.userText}>{userProfile?.username}</Text>
             <Text style={styles.rankText}>{userProfile?.email}</Text>
+            <TouchableOpacity
+            style={styles.addPlantButton}
+            onPress={() => {
+              // console.log('logout');
+              handleLogout();
+              // navigation.navigate("AddMyPlant");
+            }}
+          >
+            <View style={{
+              flexDirection: 'row',
+              // alignItems: 'center',
+              // alignContent: 'center',
+              // alignSelf: 'center',
+              gap: 8,
+              // justifyContent: 'center',
+              paddingTop: 8,
+              paddingBottom: 8,
+              
+            }}>
+              {/* <AntDesign name="plus" size={16} color="#06674B" /> */}
+              <SimpleLineIcons name="logout" size={16} color="#06674B" />
+              <Text style={styles.buttonText}>Log Out</Text>
+            </View>
+          </TouchableOpacity>
           </View>
         </View>
         <Image
@@ -43,7 +132,7 @@ const Profile = ({ navigation }) => {
             <Image
               style={styles.pointImage}
               resizeMode="contain"
-              source={require("../../assets/beginner-icon.png")}
+              source={getBadge()}
             />
             <Text style={styles.levelParagraph}>{userProfile?.badge}</Text>
           </View>
@@ -69,7 +158,7 @@ const Profile = ({ navigation }) => {
               resizeMode="contain"
               source={require("../../assets/Profile/Voucher.png")}
             />
-            <Text style={styles.levelParagraph}>2</Text>
+            <Text style={styles.levelParagraph}>{userProfile?.MyRewards.length}</Text>
           </View>
         </TouchableOpacity>
       </View>
@@ -208,6 +297,26 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     borderTopLeftRadius: 10,
     borderTopRightRadius: 10,
-    gap: 8,
+
+    gap: 8
   },
-});
+  addPlantButton: {
+    // borderWidth: 1,
+    // backgroundColor: 'black',
+    borderColor: '#06674B',
+    borderRadius: 10,
+    // borderStyle: 'dashed',
+    // alignItems: 'center',
+    // alignSelf:'center'
+    // justifyContent: 'center',
+    // width: 126,
+    // alignContent: 'center',
+    // paddingTop: 4
+    // height: 56
+  },
+  buttonText: {
+    color: '#06674B',
+    // marginLeft: 4
+  },
+})
+

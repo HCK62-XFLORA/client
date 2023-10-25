@@ -43,6 +43,7 @@ const Login = ({ navigation }) => {
       });
       await SecureStore.setItemAsync("access_token", data.access_token);
       await SecureStore.setItemAsync("UserId", data.id.toString());
+
       Toast.show({
         type: "success",
         position: "top",
@@ -55,6 +56,7 @@ const Login = ({ navigation }) => {
           setUser({ access_token: data.access_token, UserId: data.id });
         },
       });
+
     } catch (error) {
       Toast.show({
         type: "error",

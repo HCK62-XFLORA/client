@@ -7,6 +7,7 @@ import {
   Karla_600SemiBold,
   Karla_700Bold,
 } from "@expo-google-fonts/karla";
+import PrimaryButton from "../components/Buttons/PrimaryButton";
 
 const GetStarted = ({ navigation }) => {
   let [fontsLoaded, fontError] = useFonts({
@@ -25,16 +26,17 @@ const GetStarted = ({ navigation }) => {
         />
         <View style={styles.textContainer}>
           <Text style={styles.text}>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla
-            fermentum odio id. Lorem ipsum dolor sit amet, consectetur
-            adipiscing elit. Nulla fermentum odio id .
+            Digital sanctuaries that connect urban dwellers seeking respite from environmental challenges to share their love for plants. 
+            These apps cultivate a community where greenery enthusiasts can discuss gardening tips, 
+            improve air quality with indoor plants, and collectively combat pollution's adverse effects.
           </Text>
         </View>
         <View style={styles.buttonContainer}>
           <TouchableOpacity
-            style={styles.button}
+            // style={styles.button}
             onPress={() => navigation.navigate("Login")}>
-            <Text style={styles.buttonText}>Get Started</Text>
+            {/* <Text style={styles.buttonText}>Get Started</Text> */}
+            <PrimaryButton title={'Get Started'} />
           </TouchableOpacity>
         </View>
       </View>
@@ -74,10 +76,11 @@ const styles = StyleSheet.create({
   },
   textContainer: {
     paddingVertical: 45,
-    marginHorizontal: 80,
+    marginHorizontal: 60,
   },
   text: {
-    fontSize: 12,
+    fontSize: 14,
+    fontFamily: "Karla_500Medium",
     fontWeight: '300'
   },
 });

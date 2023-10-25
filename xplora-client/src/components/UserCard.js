@@ -14,12 +14,14 @@ const UserCard = () => {
 
   // const [user, setUser] = useState([]);
   // const [userData, setUserData] = useState(null);
+
   const { userProfile } = useContext(UserContext);
+
 
   const getBadge = () => {
     // return advanceBadge
     if (userProfile.badge === 'Beginner') return beginnerBadge
-    else if (userProfile.badge === 'Advance') return advanceBadge
+    else if (userProfile.badge === 'Expert') return advanceBadge
     else if (userProfile.badge === 'Intermediate') return intermediateBadge
   }
 
