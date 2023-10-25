@@ -32,7 +32,7 @@ const ChatRoom = () => {
     const [text, setText] = useState('');
     const [messages, setMessages] = useState([]);
 
-    console.log(messages.length, '<<<<length message');
+    // console.log(messages.length, '<<<<length message');
 
     // const chatGpt = axios.create({
     //         url: "https://api.openai.com/v1/engines/davinci-codex/completions",
@@ -91,6 +91,7 @@ const ChatRoom = () => {
                 // }
             ]
             });
+            setText('');
             const botResponse = await generateResponseFromChatGPT(text);
             // console.log(botResponse, '<<<<respon');
             const res = botResponse[0].message.content
@@ -99,7 +100,7 @@ const ChatRoom = () => {
                 // console.log(prev.length, "<--- dijawab bot")
                 return [...prev, { text: res, id: prev.length, type: "answer" }]
             }); 
-            setText('');
+           
         }
     };
 

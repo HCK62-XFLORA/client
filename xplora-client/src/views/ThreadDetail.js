@@ -16,6 +16,7 @@ import DislikeButton from "../components/Buttons/DislikeButton";
 import CommentCard from "../components/Comments/CommentCard";
 import axios from "axios";
 import { UserContext } from "../stores/UserContext";
+import Toast from "react-native-toast-message";
 import { ActivityIndicator } from "react-native-paper";
 // import { TextInput } from "react-native-paper";
 
@@ -33,7 +34,7 @@ const ThreadDetail = () => {
 
     useEffect(() => {
         if (threadDetail) {
-            setComments(threadDetail.Comments)
+            setComments(threadDetail.thread.Comments)
         }
     }, [threadDetail])
 
@@ -45,6 +46,8 @@ const ThreadDetail = () => {
     //     }
     // }, [threadDetail])
 
+    console.log(threadDetail, '<<<<<detail');
+    console.log(id, '<<<<<id detail');
 
 
     // https://wadinodev.com/threads/5
@@ -121,9 +124,30 @@ const ThreadDetail = () => {
             const newObj = { ...threadDetail, likes: threadDetail.likes + 1 }
             setThreadDetail(newObj)
 
+            Toast.show({
+                type: "success",
+                position: "top",
+                text1: "Thank You 👍",
+                visibilityTime: 1000,
+                autoHide: true,
+                onShow: () => {},
+                onHide: () => {
+                //   setUser({ access_token: data.access_token, UserId: data.id });
+                },
+              });
+
             // console.log(threadDetail.likes, "<<<reaction");
         } catch (error) {
-            console.error(error);
+            Toast.show({
+                type: "error",
+                position: "top",
+                text1: `${error.response.data.message}`,
+                // text2: `${error.response.data.message}`,
+                visibilityTime: 3000,
+                autoHide: true,
+              });
+            //   console.log(error);
+            // console.error(error.response);
         }
     };
 
@@ -193,12 +217,10 @@ const ThreadDetail = () => {
 
 
         <>
-
-
             <>
                 {/* <Text>BISA GA YAAAAA</Text> */}
                 <View style={styles.mainContainer}>
-                    {comments &&
+                    {comments ?
                         <FlatList
                             data={comments}
                             renderItem={({ item }) => <CommentCard item={item} />}
@@ -211,43 +233,43 @@ const ThreadDetail = () => {
                                 height,
                             }}
                             showsVerticalScrollIndicator={false}
-                            ListHeaderComponent={
-                                <View style={styles.titleContainer}>
-                                    <Text style={styles.title}>{threadDetail?.title}</Text>
-                                    <Text style={styles.contributor}>{threadDetail.User.username}</Text>
-                                    <View style={styles.imageContainer}>
-                                        <Image
-                                            style={styles.plantImage}
-                                            source={{ uri: `${threadDetail?.imgUrl}` }}
-                                            // source={require('../../assets/MyPlantCard/card1.png')}
-                                            resizeMethod="contain"
-                                        />
-                                    </View>
-                                    <Text style={styles.paragraph}>{threadDetail?.content}</Text>
-                                    <View
-                                        style={{
-                                            flexDirection: "row",
-                                            marginTop: 16,
-                                            marginBottom: 16,
-                                            gap: 8,
-                                        }}>
-                                        <TouchableOpacity
-                                            onPress={() => {
-                                                handleReaction(1);
-                                            }}>
-                                            <LikeButton like={threadDetail?.likes} />
-                                        </TouchableOpacity>
-                                        <TouchableOpacity
-                                            onPress={() => {
-                                                handleReaction(0);
-                                            }}>
-                                            <DislikeButton dislike={threadDetail?.dislikes} />
-                                        </TouchableOpacity>
-                                    </View>
-                                    <Text style={styles.commentTitle}>Comments</Text>
+                        ListHeaderComponent={
+                            <View style={styles.titleContainer}>
+                                <Text style={styles.title}>{threadDetail?.thread.title}</Text>
+                                <Text style={styles.contributor}>{'threadDetail?.thread.User.username'}</Text>
+                                <View style={styles.imageContainer}>
+                                    <Image
+                                        style={styles.plantImage}
+                                        source={{ uri: `${threadDetail?.thread.imgUrl}` }}
+                                        // source={require('../../assets/MyPlantCard/card1.png')}
+                                        resizeMethod="contain"
+                                    />
                                 </View>
-                            }
-                        />
+                                <Text style={styles.paragraph}>{threadDetail?.thread.content}</Text>
+                                <View
+                                    style={{
+                                        flexDirection: "row",
+                                        marginTop: 16,
+                                        marginBottom: 16,
+                                        gap: 8,
+                                    }}>
+                                    <TouchableOpacity
+                                        onPress={() => {
+                                            handleReaction(1);
+                                        }}>
+                                        <LikeButton like={threadDetail?.likes} />
+                                    </TouchableOpacity>
+                                    <TouchableOpacity
+                                        onPress={() => {
+                                            handleReaction(0);
+                                        }}>
+                                        <DislikeButton dislike={threadDetail?.dislikes} />
+                                    </TouchableOpacity>
+                                </View>
+                                <Text style={styles.commentTitle}>Comments</Text>
+                            </View>
+                        }
+                        /> : null
                     }
                 </View>
                 <View

@@ -189,7 +189,7 @@ const Homescreen = ({ navigation }) => {
             backgroundColor: "#DEEAE5",
           }}
           showsVerticalScrollIndicator={false}>
-          <Button
+          {/* <Button
             onPress={() => {
               handleLogout();
             }}
@@ -197,7 +197,7 @@ const Homescreen = ({ navigation }) => {
             color="tomato"
             accessibilityLabel="Submit button"
 
-          />
+          /> */}
 
           {/* top container  */}
           <View style={homeStyles.topContainer}>
