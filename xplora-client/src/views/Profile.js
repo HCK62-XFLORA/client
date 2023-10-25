@@ -60,7 +60,7 @@ const threadsData = [
   },
 ]
 
-const Profile = ({navigation}) => {
+const Profile = ({ navigation }) => {
   const { userProfile, setUser } = useContext(UserContext);
   const getBadge = () => {
     // return advanceBadge
@@ -94,29 +94,29 @@ const Profile = ({navigation}) => {
             <Text style={styles.userText}>{userProfile?.username}</Text>
             <Text style={styles.rankText}>{userProfile?.email}</Text>
             <TouchableOpacity
-            style={styles.addPlantButton}
-            onPress={() => {
-              // console.log('logout');
-              handleLogout();
-              // navigation.navigate("AddMyPlant");
-            }}
-          >
-            <View style={{
-              flexDirection: 'row',
-              // alignItems: 'center',
-              // alignContent: 'center',
-              // alignSelf: 'center',
-              gap: 8,
-              // justifyContent: 'center',
-              paddingTop: 8,
-              paddingBottom: 8,
-              
-            }}>
-              {/* <AntDesign name="plus" size={16} color="#06674B" /> */}
-              <SimpleLineIcons name="logout" size={16} color="#06674B" />
-              <Text style={styles.buttonText}>Log Out</Text>
-            </View>
-          </TouchableOpacity>
+              style={styles.addPlantButton}
+              onPress={() => {
+                // console.log('logout');
+                handleLogout();
+                // navigation.navigate("AddMyPlant");
+              }}
+            >
+              <View style={{
+                flexDirection: 'row',
+                // alignItems: 'center',
+                // alignContent: 'center',
+                // alignSelf: 'center',
+                gap: 8,
+                // justifyContent: 'center',
+                paddingTop: 8,
+                paddingBottom: 8,
+
+              }}>
+                {/* <AntDesign name="plus" size={16} color="#06674B" /> */}
+                <SimpleLineIcons name="logout" size={16} color="#06674B" />
+                <Text style={styles.buttonText}>Log Out</Text>
+              </View>
+            </TouchableOpacity>
           </View>
         </View>
         <Image
@@ -194,7 +194,15 @@ const Profile = ({navigation}) => {
             b.createdAt.localeCompare(a.createdAt)
           )}
           nestedScrollEnabled={true}
-          renderItem={({ item }) => <ThreadHome item={item} />}
+          renderItem={({ item }) =>
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate("ThreadDetail", { id: item.id });
+              }}>
+              <ThreadHome item={item} />
+            </TouchableOpacity>
+
+          }
           style={{
             // flex:1,
             overflow: "hidden",
