@@ -8,7 +8,6 @@ import intermediateBadge from '../../assets/userBadges/badge-intermediate.png'
 import { UserContext } from "../stores/UserContext";
 
 
-
 const { height, width } = Dimensions.get('screen')
 
 const UserCard = () => {
@@ -16,8 +15,6 @@ const UserCard = () => {
   // const [user, setUser] = useState([]);
   // const [userData, setUserData] = useState(null);
   const { userProfile } = useContext(UserContext);
-
-  // console.log(userProfile, '<<<context');
 
   const getBadge = () => {
     // return advanceBadge

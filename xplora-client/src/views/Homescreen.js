@@ -6,6 +6,7 @@ import {
   View,
   ScrollView,
   Button,
+  RefreshControl,
   Animated,
 } from "react-native";
 import NavBottomActive from "../components/NavBottom/NavBottom-active";
@@ -13,8 +14,7 @@ import UserCard from "../components/UserCard";
 import Slider from "../components/Promo/Slider";
 import MyPlantHome from "../components/MyPlant/MyPlantHome";
 import ThreadHome from "../components/Thread/ThreadHome";
-// import {Karla_600SemiBold} from '@expo-google-fonts/karla'
-import { useContext, useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import axios from "axios";
 import * as SecureStore from "expo-secure-store";
 import { UserContext } from "../stores/UserContext";
@@ -75,6 +75,14 @@ import { ActivityIndicator } from "react-native-paper";
 // ];
 
 const Homescreen = ({ navigation }) => {
+  const [refreshing, setRefreshing] = React.useState(false);
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    setTimeout(() => {
+      setRefreshing(false);
+    }, 2000);
+  }, []);
+
   const [isLoading, setLoading] = useState(true);
   const [threads, setThreads] = useState([]);
   const [plants, setPlants] = useState([]);
@@ -131,10 +139,10 @@ const Homescreen = ({ navigation }) => {
       const { data } = await axios({
         url: "https://wadinodev.com/threads?nthThreads=1",
         method: "GET",
-        headers: { access_token: user.access_token }
+        headers: { access_token: user.access_token },
       });
       setThreads(data);
-      return data
+      return data;
     } catch (error) {
       console.error(error);
     } finally {
@@ -159,30 +167,23 @@ const Homescreen = ({ navigation }) => {
       const { data } = await axios({
         url: "https://wadinodev.com/users/my-plant",
         method: "GET",
-        headers: { access_token: user.access_token }
+        headers: { access_token: user.access_token },
       });
       setPlants(data);
-      return data
+      return data;
     } catch (error) {
       console.log(error);
     }
-  }
+  };
 
   const getUser = async () => {
     try {
       const access_token = await SecureStore.getItemAsync("access_token");
       const id = await SecureStore.getItemAsync("UserId");
-      console.log(access_token, id, '[[[[[[[inilohhhhhhh');
-      // console.log(
-      //   "🚀 ~ file: App.js:37 ~ getUser ~ access_token, id:",
-      //   access_token,
-      //   id
-      // );
-      // setUser({ access_token, id });
       return {
         access_token,
-        id
-      }
+        id,
+      };
     } catch (error) {
       console.log("🚀 ~ file: App.js:37 ~ getUser ~ error:", error);
     }
@@ -198,28 +199,6 @@ const Homescreen = ({ navigation }) => {
       console.log("🚀 ~ file: App.js:37 ~ getUser ~ error:", error);
     }
   };
-
-  // useEffect(() => {
-  //   // getUser()
-  //   //   .then(({ access_token }) => {
-  //   //     return fetchPlants(access_token)
-  //   //   })
-  //   //   .then(() => {
-  //   //     return fetchThreads()
-  //   //   })
-  //   //   .finally(() => {
-  //   //     setLoading(false)
-  //   //   })
-  //   //   .catch((err) => console.log(err, "here"))
-  //   fetchPlants()
-  //     .then(() => {
-  //       fetchThreads()
-  //     })
-  //     .finally(() => {
-  //       setLoading(false)
-  //     })
-
-  // }, []);
 
   useEffect(() => {
     fetchThreads()
@@ -254,6 +233,9 @@ const Homescreen = ({ navigation }) => {
           <ActivityIndicator />
         </View> :
         <ScrollView
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          }
           style={{
             flex: 1,
             gap: 16,
@@ -370,8 +352,8 @@ const Homescreen = ({ navigation }) => {
         </ScrollView>
       }
     </>
-  );
-};
+  )
+}
 
 export default Homescreen;
 

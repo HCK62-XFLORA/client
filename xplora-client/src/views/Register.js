@@ -16,6 +16,11 @@ import {
   Karla_600SemiBold,
   Karla_700Bold,
 } from "@expo-google-fonts/karla";
+import SelectDropdown from "react-native-select-dropdown";
+import FontAwesome from "react-native-vector-icons/FontAwesome";
+import axios from 'axios';
+
+const BASE_URL = `https://wadinodev.com`;
 
 const Register = ({ navigation }) => {
   const [username, setUsername] = React.useState("");
@@ -25,6 +30,24 @@ const Register = ({ navigation }) => {
   const [password, setPassword] = React.useState("");
 
   const [showPassword, setShowPassword] = React.useState(false);
+
+  const [gender, setGender] = React.useState("");
+
+  const genderOption = ["Male", "Female"];
+
+  const handleRegister = async (username, email, password, gender) => {
+    try {
+      const { data } = await axios({
+        method: "POST",
+        url: BASE_URL + "/users/register",
+        data: { username, email, password, gender },
+      });
+      console.log(data);
+      navigation.navigate("Login");
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   let [fontsLoaded, fontError] = useFonts({
     Karla_500Medium,
@@ -82,10 +105,42 @@ const Register = ({ navigation }) => {
             }
           />
         </View>
+        <View style={styles.inputContainer}>
+          <SelectDropdown
+            data={genderOption}
+            // defaultValueByIndex={1}
+            // defaultValue={'Egypt'}
+            onSelect={(selectedItem, index) => {
+              setGender(selectedItem);
+            }}
+            defaultButtonText={"Select gender"}
+            buttonTextAfterSelection={(selectedItem, index) => {
+              return selectedItem;
+            }}
+            rowTextForSelection={(item, index) => {
+              return item;
+            }}
+            buttonStyle={styles.dropdown1BtnStyle}
+            buttonTextStyle={styles.dropdown1BtnTxtStyle}
+            renderDropdownIcon={(isOpened) => {
+              return (
+                <FontAwesome
+                  name={isOpened ? "chevron-up" : "chevron-down"}
+                  color={"#444"}
+                  size={18}
+                />
+              );
+            }}
+            dropdownIconPosition={"right"}
+            dropdownStyle={styles.dropdown1DropdownStyle}
+            rowStyle={styles.dropdown1RowStyle}
+            rowTextStyle={styles.dropdown1RowTxtStyle}
+          />
+        </View>
         <View style={styles.buttonContainer}>
           <TouchableOpacity
             style={styles.button}
-            onPress={() => navigation.navigate("TabNavigator")}>
+            onPress={() => handleRegister(username, email, password, gender)}>
             <Text style={styles.buttonText}>Register</Text>
           </TouchableOpacity>
         </View>
@@ -170,5 +225,31 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
+  },
+  dropdown1BtnStyle: {
+    flex: 1,
+    // width: '80%',
+    // height: 50,
+    backgroundColor: "#ffffff",
+    borderRadius: 5,
+    borderWidth: 1,
+    borderColor: "#898989",
+  },
+  dropdown1BtnTxtStyle: {
+    fontFamily: "Karla_500Medium",
+    color: "#898989",
+    fontSize: 14,
+    textAlign: "left",
+  },
+  dropdown1DropdownStyle: { backgroundColor: "#EFEFEF" },
+  dropdown1RowStyle: {
+    backgroundColor: "#EFEFEF",
+    borderBottomColor: "#C5C5C5",
+  },
+  dropdown1RowTxtStyle: {
+    fontFamily: "Karla_500Medium",
+    color: "#898989",
+    fontSize: 14,
+    textAlign: "left",
   },
 });

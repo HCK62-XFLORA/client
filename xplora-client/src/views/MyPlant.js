@@ -74,6 +74,9 @@ const MyPlan = ({ navigation }) => {
           </View>
           <Button
             style={styles.addPlantButton}
+            onPress={() => {
+              navigation.navigate("AddMyPlant");
+            }}
           >
             <View style={{
               flexDirection: 'row',
