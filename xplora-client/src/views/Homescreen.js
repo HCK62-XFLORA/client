@@ -23,6 +23,7 @@ import BottomSheet, { BottomSheetView } from "@gorhom/bottom-sheet"
 import Pagination from "../components/Promo/Pagination";
 import PromoDetail from "./PromoDetail";
 import { ActivityIndicator } from "react-native-paper";
+import LottieView from 'lottie-react-native';
 
 // const myPlantData = [
 //   {
@@ -93,7 +94,7 @@ const Homescreen = ({ navigation }) => {
 
   const { user, userProfile, setUser } = useContext(UserContext);
 
-  // console.log(userProfile, '<<<userHome Screen');
+  // console.log(userProfile.MyRewards, '<<<userHome Screen');
 
   const scrollX = useRef(new Animated.Value(0)).current
 
@@ -134,8 +135,11 @@ const Homescreen = ({ navigation }) => {
     }
   }
 
+// console.log(user, '<<<<<dari luar');
+
   const fetchThreads = async () => {
     try {
+      console.log(user, '<<<<homeniiii');
       const { data } = await axios({
         url: "https://wadinodev.com/threads?nthThreads=1",
         method: "GET",
@@ -189,24 +193,37 @@ const Homescreen = ({ navigation }) => {
     }
   };
 
-  const handleLogout = async () => {
-    try {
-      const access_token = await SecureStore.deleteItemAsync("access_token");
-      const deleteId = await SecureStore.deleteItemAsync("id");
-      const id = await SecureStore.deleteItemAsync("UserId");
-      setUser(null);
-    } catch (error) {
-      console.log("🚀 ~ file: App.js:37 ~ getUser ~ error:", error);
-    }
-  };
+  // const handleLogout = async () => {
+  //   try {
+  //     const access_token = await SecureStore.deleteItemAsync("access_token");
+  //     const deleteId = await SecureStore.deleteItemAsync("id");
+  //     const id = await SecureStore.deleteItemAsync("UserId");
+  //     setUser(null);
+  //   } catch (error) {
+  //     console.log("🚀 ~ file: App.js:37 ~ getUser ~ error:", error);
+  //   }
+  // };
 
   useEffect(() => {
+    setLoading(true)
     fetchThreads()
+    .then(() => {
+      fetchRewards()
+      
+    })
+    .catch((err) => {
+      console.log(err);
+    })
+    .finally(() => {
+      setLoading(false)
+    })
   }, [])
 
-  useEffect(() => {
-    fetchRewards()
-  }, [])
+  // console.log(threads, '<<<<');
+
+  // useEffect(() => {
+  //   fetchRewards()
+  // }, [])
 
   // console.log(rewards, '<<<home reward');
 
@@ -230,7 +247,7 @@ const Homescreen = ({ navigation }) => {
     <>
       {isLoading ?
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-          <ActivityIndicator />
+          <LottieView source={require('../../assets/Animation/Animation-1698244161327.json')} autoPlay loop />
         </View> :
         <ScrollView
           refreshControl={
@@ -238,7 +255,7 @@ const Homescreen = ({ navigation }) => {
           }
           style={{
             flex: 1,
-            gap: 16,
+            // gap: 16,
             backgroundColor: "#DEEAE5",
           }}
           showsVerticalScrollIndicator={false}>
@@ -250,26 +267,6 @@ const Homescreen = ({ navigation }) => {
             color="tomato"
             accessibilityLabel="Submit button"
           /> */}
-          {/* <FlatList
-        data={myPlantData}
-        renderItem={({ item }) =>
-          <TouchableOpacity
-            onPress={() => {
-              navigation.navigate("MyPlantDetail", { id: item.id })
-            }}>
-            <MyPlantHome item={item} />
-          </TouchableOpacity>
-        }
-        horizontal={true}
-        showsHorizontalScrollIndicator={false}
-        style={{
-          // flex:1, 
-          overflow: 'hidden',
-          marginBottom: 16,
-          paddingLeft: 16,
-          paddingRight: 16
-        }}
-      /> */}
           {/* top container  */}
           <View style={homeStyles.topContainer}>
             <UserCard />

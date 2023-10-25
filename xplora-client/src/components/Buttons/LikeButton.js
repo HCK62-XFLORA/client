@@ -1,7 +1,8 @@
 import { StyleSheet, Text, View, Image } from 'react-native'
 import React from 'react'
 
-const LikeButton = () => {
+const LikeButton = ({like}) => {
+    console.log(like, '<<<<<');
     return (
         <View style={{
             flexDirection: 'row',
@@ -20,7 +21,7 @@ const LikeButton = () => {
             />
             <Text
                 style={styles.buttonText}
-            >Like</Text>
+            >{like} Like</Text>
         </View>
     )
 }

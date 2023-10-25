@@ -2,7 +2,7 @@ import { StyleSheet, Text, View, Image } from 'react-native'
 import React from 'react'
 
 const CommentCard = ({ item }) => {
-    // console.log(item), 'comment <<<';
+    console.log(item), 'comment <<<';
     return (
         <View style={{
             flexDirection: 'row',
