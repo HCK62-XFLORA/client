@@ -1,5 +1,6 @@
-import * as React from "react";
 // import { TextInput } from "react-native-paper";
+import { useRoute } from "@react-navigation/native";
+import React, { useContext, useState } from "react";
 import {
   SafeAreaView,
   StyleSheet,
@@ -10,10 +11,67 @@ import {
   TouchableOpacity,
   Image,
 } from "react-native";
+import ThirdButton from "../components/Buttons/ThirdButton";
+import * as ImagePicker from "expo-image-picker";
+import axios from "axios";
+import { UserContext } from "../stores/UserContext";
+
+const BASE_URL = `https://wadinodev.com`;
 
 const AddThread = () => {
   const [title, onChangTitle] = React.useState("");
   const [description, onChangDescription] = React.useState("");
+  const [image, setImage] = React.useState();
+
+  const route = useRoute();
+  // const id = route.params.id
+  const { user } = useContext(UserContext);
+
+  const pickImage = async () => {
+    try {
+      let result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.All,
+        allowsEditing: true,
+        aspect: [4, 3],
+        quality: 1,
+      });
+      let localUri = result.uri;
+      let filename = localUri.split("/").pop();
+
+      // Infer the type of the image
+      let match = /\.(\w+)$/.exec(filename);
+      let type = match ? `image/${match[1]}` : `image`;
+      const formData = new FormData();
+      // console.log(result.uri);
+      formData.append("image", image);
+
+      setImage(formData);
+
+      if (!result.canceled) {
+        setImage(result.assets[0].uri);
+      }
+    } catch (error) {
+      console.log(error, "<<<predicr");
+    }
+    // No permissions request is necessary for launching the image library
+  };
+
+  const postThreads = async (title, content, image) => {
+    try {
+      console.log("🚀 ~ file: AddThreads.js:63 ~ postThreads ~ image:", image)
+      const { data } = await axios({
+        method: "POST",
+        url: BASE_URL + "/threads",
+        data: { title, content, image },
+        headers: {
+          access_token: user.access_token,
+        },
+      });
+      navigation.navigate("Threads");
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   return (
     <>
@@ -42,11 +100,7 @@ const AddThread = () => {
         </View>
 
         <View style={styles.buttonContainer}>
-          <TouchableOpacity
-            style={styles.buttonAddCover}
-            onPress={() => {
-              console.log("add image");
-            }}>
+          <TouchableOpacity style={styles.buttonAddCover} onPress={pickImage}>
             <View style={styles.buttonContent}>
               <Image
                 style={styles.addIcon}
@@ -60,9 +114,7 @@ const AddThread = () => {
         <View style={styles.buttonContainer}>
           <TouchableOpacity
             style={styles.button}
-            onPress={() => {
-              console.log("post thread");
-            }}>
+            onPress={() => postThreads(title, description, image)}>
             <Text style={styles.buttonText}>Post Thread</Text>
           </TouchableOpacity>
         </View>
@@ -137,9 +189,9 @@ const styles = StyleSheet.create({
   buttonContent: {
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: 'space-between',
+    justifyContent: "space-between",
     paddingHorizontal: 5,
-    gap: 8
+    gap: 8,
   },
   buttonText: {
     fontFamily: "Karla_500Medium",
@@ -156,6 +208,5 @@ const styles = StyleSheet.create({
   addIcon: {
     height: 20,
     width: 20,
-    
   },
 });

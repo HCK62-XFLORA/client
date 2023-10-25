@@ -2,8 +2,6 @@ import { StyleSheet, Text, View, Image } from "react-native";
 import React from "react";
 
 const MyPlantHome = ({ item }) => {
-  console.log("🚀 ~ file: MyPlantCard2.js:5 ~ MyPlantHome ~ item:", item);
-  // console.log(item, '<<<');
   return (
     <View style={styles.container}>
       <Image

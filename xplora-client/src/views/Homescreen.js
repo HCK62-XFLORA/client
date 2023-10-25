@@ -6,17 +6,17 @@ import {
   View,
   ScrollView,
   Button,
+  RefreshControl,
 } from "react-native";
 import NavBottomActive from "../components/NavBottom/NavBottom-active";
 import UserCard from "../components/UserCard";
 import Slider from "../components/Promo/Slider";
 import MyPlantHome from "../components/MyPlant/MyPlantHome";
 import ThreadHome from "../components/Thread/ThreadHome";
-import { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import * as SecureStore from "expo-secure-store";
 import { UserContext } from "../stores/UserContext";
-
 
 const threadsData = [
   {
@@ -50,6 +50,14 @@ const threadsData = [
 ];
 
 const Homescreen = ({ navigation }) => {
+  const [refreshing, setRefreshing] = React.useState(false);
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    setTimeout(() => {
+      setRefreshing(false);
+    }, 2000);
+  }, []);
+
   const [isLoading, setLoading] = useState(true);
   const [threads, setThreads] = useState([]);
   const [plants, setPlants] = useState([]);
@@ -61,7 +69,7 @@ const Homescreen = ({ navigation }) => {
       const { data } = await axios({
         url: "https://wadinodev.com/threads?nthThreads=1",
         method: "GET",
-        headers: { access_token: user.access_token }
+        headers: { access_token: user.access_token },
       });
       setThreads(data);
       return data;
@@ -120,6 +128,9 @@ const Homescreen = ({ navigation }) => {
         <Text> Loading </Text>
       ) : (
         <ScrollView
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          }
           style={{
             flex: 1,
             gap: 16,
