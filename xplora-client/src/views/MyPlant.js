@@ -1,9 +1,10 @@
 import { StyleSheet, Text, View, ScrollView, Image, FlatList, Dimensions, TouchableOpacity } from 'react-native'
-import React, { useContext } from 'react'
+import React, { useContext, useState } from 'react'
 import { Button } from 'react-native-paper'
 import MyPlantCard2 from '../components/MyPlant/MyPlantCard2'
 import { AntDesign } from '@expo/vector-icons';
 import { UserContext } from '../stores/UserContext';
+import LottieView from 'lottie-react-native';
 
 const myPlantData = [
   {
@@ -51,6 +52,7 @@ const myPlantData = [
 const { height } = Dimensions.get('screen')
 
 const MyPlan = ({ navigation }) => {
+  const [isLoading, setLoading] = useState(true);
   const { userProfile } = useContext(UserContext);
 
   // console.log(userProfile, '<<<<myPlant');
@@ -68,7 +70,7 @@ const MyPlan = ({ navigation }) => {
             <Image
               style={styles.userImage}
               source={require('../../assets/icons/Myplant-icon.png')}
-              resizeMethod='contain'
+              resizeMode='contain'
             />
             <Text style={styles.rankText}>{userProfile?.MyPlants.length} plants</Text>
           </View>

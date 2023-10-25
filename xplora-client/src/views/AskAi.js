@@ -5,6 +5,7 @@ import { generateResponse } from '../helpers/ChatGPT';
 import { useRoute } from '@react-navigation/native';
 import { UserContext } from '../stores/UserContext';
 const { width, height } = Dimensions.get('screen')
+import LottieView from 'lottie-react-native';
 
 const ChatRoom = () => {
 
@@ -31,6 +32,7 @@ const ChatRoom = () => {
 
     const [text, setText] = useState('');
     const [messages, setMessages] = useState([]);
+    const [isLoading, setLoading] = useState(true);
 
     // console.log(messages.length, '<<<<length message');
 

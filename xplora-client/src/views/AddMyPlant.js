@@ -1,13 +1,14 @@
 // import { TextInput } from "react-native-paper";
 import {
-  SafeAreaView,
   StyleSheet,
   Text,
   TextInput,
   View,
-  Button,
   TouchableOpacity,
   Image,
+  Dimensions,
+  ScrollView,
+  ActivityIndicator,
 } from "react-native";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import Ionicons from "react-native-vector-icons/Ionicons";
@@ -18,16 +19,19 @@ import { UserContext } from "../stores/UserContext";
 import * as ImagePicker from "expo-image-picker";
 import Toast from "react-native-toast-message";
 
+const { width, height } = Dimensions.get('screen')
+
 const BASE_URL = `https://wadinodev.com`;
 
 const AddMyPlant = ({ navigation }) => {
-  const [plantName, setPlantName] = React.useState("");
-  const [PlantId, setPlantId] = React.useState();
+  const [plantName, setPlantName] = useState("");
+  const [PlantId, setPlantId] = useState();
   console.log("🚀 ~ file: AddMyPlant.js:22 ~ AddMyPlant ~ PlantId:", PlantId);
-  const [description, onChangDescription] = React.useState("");
-  const [image, setImage] = React.useState();
+  const [description, onChangDescription] = useState("");
+  const [image, setImage] = useState(null);
   const [plantData, setPlantData] = useState(null);
   const { user, fetchUser } = useContext(UserContext);
+  const [isLoading, setLoading] = useState(false);
 
   const pickImage = async () => {
     try {
@@ -37,13 +41,16 @@ const AddMyPlant = ({ navigation }) => {
         aspect: [4, 3],
         quality: 1,
       });
-      let localUri = result.uri;
-      let filename = localUri.split("/").pop();
-      // Infer the type of the image
-      let match = /\.(\w+)$/.exec(filename);
-      let type = match ? `image/${match[1]}` : `image`;
 
-      setImage({ uri: result.uri, name: filename, type });
+      let localUri = result.uri;
+      if (localUri) {
+        let filename = localUri.split("/").pop();
+        // Infer the type of the image
+        let match = /\.(\w+)$/.exec(filename);
+        let type = match ? `image/${match[1]}` : `image`;
+
+        setImage({ uri: result.uri, name: filename, type });
+      }
     } catch (error) {
       Toast.show({
         type: "error",
@@ -73,10 +80,32 @@ const AddMyPlant = ({ navigation }) => {
 
   const postMyPlant = async () => {
     try {
+      if (!image) {
+        Toast.show({
+          type: "error",
+          position: "top",
+          text1: "Please Choose Image",
+          visibilityTime: 3000,
+          autoHide: true,
+        });
+        return
+      }
+
+      if (!PlantId) {
+        Toast.show({
+          type: "error",
+          position: "top",
+          text1: "Please Choose Plant",
+          visibilityTime: 3000,
+          autoHide: true,
+        });
+        return
+      }
       const formData = new FormData();
       formData.append("PlantId", PlantId);
       formData.append("image", image);
 
+      setLoading(true)
       const { data } = await axios({
         method: "POST",
         url: BASE_URL + "/users/my-plant",
@@ -93,12 +122,13 @@ const AddMyPlant = ({ navigation }) => {
         text1: "Plant added!",
         visibilityTime: 1000,
         autoHide: true,
-        onShow: () => {},
+        onShow: () => { },
         onHide: () => {
           navigation.navigate("Profile");
         },
       });
     } catch (error) {
+      console.log("ERROR Add my plant", error)
       Toast.show({
         type: "error",
         position: "top",
@@ -107,6 +137,8 @@ const AddMyPlant = ({ navigation }) => {
         visibilityTime: 2000,
         autoHide: true,
       });
+    } finally {
+      setLoading(false)
     }
   };
 
@@ -119,7 +151,7 @@ const AddMyPlant = ({ navigation }) => {
   }, []);
   return (
     <>
-      <View style={styles.mainContainer}>
+      <ScrollView style={styles.mainContainer}>
         <Text style={styles.header}>Add Plant</Text>
         <Text style={styles.label}>Plant name</Text>
         <View style={styles.selectContainer}>
@@ -178,6 +210,9 @@ const AddMyPlant = ({ navigation }) => {
           />
         </View>
 
+        <View style={{ alignItems: 'center' }}>
+          {image ? (<Image source={{ uri: image.uri }} style={{ width: width * 0.8, height: height * 0.3 }} resizeMode="contain" />) : null}
+        </View>
         <View style={styles.buttonContainer}>
           <TouchableOpacity style={styles.buttonAddCover} onPress={pickImage}>
             <View style={styles.buttonContent}>
@@ -185,12 +220,13 @@ const AddMyPlant = ({ navigation }) => {
                 style={styles.addIcon}
                 source={require("../../assets/add-img.png")}
               />
-              <Text style={styles.addCoverText}>Add Photo</Text>
+              <Text style={styles.addCoverText}>{image ? 'Change Photo' : 'Add Photo'}</Text>
             </View>
           </TouchableOpacity>
         </View>
 
-        <View style={styles.buttonContainer}>
+        { isLoading ? (<ActivityIndicator/>) : (
+          <View style = {styles.buttonContainer}>
           <TouchableOpacity
             style={styles.button}
             onPress={() => {
@@ -199,7 +235,8 @@ const AddMyPlant = ({ navigation }) => {
             <Text style={styles.buttonText}>Add Plant</Text>
           </TouchableOpacity>
         </View>
-      </View>
+        )}
+    </ScrollView >
     </>
   );
 };

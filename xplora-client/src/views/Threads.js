@@ -1,5 +1,15 @@
 
-import { StyleSheet, Text, View, FlatList, ScrollView, TouchableOpacity, Image, Dimensions, Button } from 'react-native'
+import {
+  StyleSheet,
+  Text,
+  View,
+  FlatList,
+  ScrollView,
+  TouchableOpacity,
+  Image,
+  Dimensions,
+  ActivityIndicator,
+} from 'react-native'
 import React, { useContext, useEffect, useState } from 'react'
 import UserCard from '../components/UserCard'
 import ThreadHome from '../components/Thread/ThreadHome'
@@ -29,6 +39,7 @@ const categories = [
 const { width, height } = Dimensions.get("screen");
 
 const Threads = ({ navigation }) => {
+  const [isLoading, setLoading] = useState(false);
   const [threads, setThreads] = useState();
   const [ForumId, setForumId] = useState("");
   console.log("🚀 ~ file: Threads.js:79 ~ Threads ~ ForumId:", ForumId);
@@ -37,6 +48,7 @@ const Threads = ({ navigation }) => {
 
   const fetchThreads = async () => {
     try {
+      setLoading(true)
       const { data } = await axios({
 
         url: "https://wadinodev.com/threads?nthThreads=1&ForumId=" + ForumId,
@@ -113,56 +125,59 @@ const Threads = ({ navigation }) => {
         />
 
         <Text style={styles.sectionTitle}>Featured Threads</Text>
-        <TouchableOpacity
-          style={{
-            // flex:1,
-            // marginTop: 12,
-            marginHorizontal: 20,
-            // marginBottom: 16,
-            // paddingLeft: 16,
-            // paddingRight: 16,
-            padding: 8,
-            borderWidth: 1,
-            borderRadius: 10,
-            // alignItems: 'center',
-            justifyContent: 'center',
-            flexDirection: 'row',
-            borderColor: '#06674B',
-            gap: 8
-          }}
-
-          onPress={() => navigation.navigate("AddThreads")}>
-
-          <AntDesign name="plus" size={16} color="#06674B" />
-          <Text
+        {
+          isLoading ? (<ActivityIndicator size="large"/>) : (<>
+          <TouchableOpacity
             style={{
-              fontFamily: 'Karla_500Medium',
-              color: '#06674B'
+              // flex:1,
+              // marginTop: 12,
+              marginHorizontal: 20,
+              // marginBottom: 16,
+              // paddingLeft: 16,
+              // paddingRight: 16,
+              padding: 8,
+              borderWidth: 1,
+              borderRadius: 10,
+              // alignItems: 'center',
+              justifyContent: 'center',
+              flexDirection: 'row',
+              borderColor: '#06674B',
+              gap: 8
             }}
-          >
-            Add Thread
-          </Text>
-        </TouchableOpacity>
 
-        <FlatList
-          data={threads?.sort((a, b) => b.createdAt.localeCompare(a.createdAt))}
-          renderItem={({ item }) => (
-            <TouchableOpacity
-              onPress={() => {
-                navigation.navigate("ThreadDetail", { id: item.id });
-              }}>
-              <ThreadHome item={item} />
-            </TouchableOpacity>
+            onPress={() => navigation.navigate("AddThreads")}>
+
+            <AntDesign name="plus" size={16} color="#06674B" />
+            <Text
+              style={{
+                fontFamily: 'Karla_500Medium',
+                color: '#06674B'
+              }}
+            >
+              Add Thread
+            </Text>
+          </TouchableOpacity>
+
+          <FlatList
+            data={threads?.sort((a, b) => b.createdAt.localeCompare(a.createdAt))}
+            renderItem={({ item }) => (
+              <TouchableOpacity
+                onPress={() => {
+                  navigation.navigate("ThreadDetail", { id: item.id });
+                }}>
+                <ThreadHome item={item} />
+              </TouchableOpacity>
+            )}
+            style={{
+              // flex:1,
+              overflow: "hidden",
+              marginBottom: 16,
+              paddingLeft: 16,
+              paddingRight: 16,
+            }}
+            nestedScrollEnabled={true}
+          /></>
           )}
-          style={{
-            // flex:1,
-            overflow: "hidden",
-            marginBottom: 16,
-            paddingLeft: 16,
-            paddingRight: 16,
-          }}
-          nestedScrollEnabled={true}
-        />
       </View>
     </ScrollView>
   );

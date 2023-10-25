@@ -3,6 +3,7 @@ import React, { useContext, useState } from 'react'
 import axios from 'axios'
 import { useRoute } from '@react-navigation/native'
 import { UserContext } from '../stores/UserContext'
+import LottieView from 'lottie-react-native';
 import PrimaryButton from '../components/Buttons/PrimaryButton'
 
 const { width, height } = Dimensions.get('screen')
@@ -40,7 +41,7 @@ const PromoDetail = ({ navigation }) => {
                 url: `https://wadinodev.com/users/profile/${user.id}`,
                 method: "GET",
                 headers: { access_token: user.access_token },
-              });
+            });
             setUserProfile(data);
             navigation.navigate('MyVoucher')
         } catch (error) {
@@ -126,6 +127,10 @@ const PromoDetail = ({ navigation }) => {
                         <PrimaryButton title={'Redeem Voucher'} />
                     </TouchableOpacity>
                 </View>
+                {/* <LottieView 
+                style={{flex:1}}
+                source={require('../../assets/Animation/Animation-1698244161327.json')} autoPlay loop /> */}
+
             </View>
         </SafeAreaView>
     )

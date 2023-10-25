@@ -23,7 +23,10 @@ import BottomSheet, { BottomSheetView } from "@gorhom/bottom-sheet"
 import Pagination from "../components/Promo/Pagination";
 import PromoDetail from "./PromoDetail";
 import { ActivityIndicator } from "react-native-paper";
+// import { MotiView } from 'moti'
 import LottieView from 'lottie-react-native';
+import 'react-native-reanimated'
+import 'react-native-gesture-handler'
 
 const Homescreen = ({ navigation }) => {
   const [refreshing, setRefreshing] = React.useState(false);
@@ -177,7 +180,9 @@ const Homescreen = ({ navigation }) => {
     <>
       {isLoading ?
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-          <LottieView source={require('../../assets/Animation/Animation-1698244161327.json')} autoPlay loop />
+          <LottieView 
+           style={{flex:1}}
+          source={require('../../assets/Animation/Animation-1698244161327.json')} autoPlay loop />
         </View> :
         <ScrollView
           refreshControl={
@@ -200,6 +205,7 @@ const Homescreen = ({ navigation }) => {
           /> */}
 
           {/* top container  */}
+          
           <View style={homeStyles.topContainer}>
             <UserCard />
             <View style={homeStyles.heroContainer}>
