@@ -12,7 +12,7 @@ import ThirdButton from '../components/Buttons/ThirdButton';
 import * as ImagePicker from 'expo-image-picker';
 import axios from 'axios'
 import { UserContext } from '../stores/UserContext';
-
+import { FontAwesome5 } from '@expo/vector-icons';
 
 const { width, height } = Dimensions.get('screen')
 
@@ -23,7 +23,7 @@ const MyPlantDetail = ({ navigation }) => {
     const id = route.params.id
     const { user, userProfile } = useContext(UserContext);
     const [plant, setPlant] = useState({})
-
+    const [isImageSelected, setIsImageSelected] = useState(false);
     // console.log(id, '<<<myplant');
     //   const [image, setImage] = useState(null);
     // console.log(userProfile, '<<<plant detail');
@@ -63,7 +63,7 @@ const MyPlantDetail = ({ navigation }) => {
             console.log(result.uri);
             formData.append('image', { uri: result.uri, name: filename, type })
             const { data } = await axios({
-                url: "https://wadinodev.com/users/predict",
+                url: `https://wadinodev.com/users/predict/${id}`,
                 method: "post",
                 headers: {
                     access_token: user.access_token,
@@ -72,7 +72,7 @@ const MyPlantDetail = ({ navigation }) => {
                 data: formData
             })
 
-            console.log(data, '<<<<<<data predict');
+            // console.log(data, '<<<<<<data predict');
             if (!result.canceled) {
                 setImage(result.assets[0].uri);
             }
@@ -109,28 +109,88 @@ const MyPlantDetail = ({ navigation }) => {
         return null;
     }
 
+    const getQuestion = (question) => {
+        // question.
+        // console.log(question);
+        const originalString = question;
+        const modifiedString = originalString.replace(/[_\,]+/g, ' ').trim();
+        const questionAi = `how to cure ${modifiedString}`
+        navigation.navigate('AskAi', { questionAi })
+        // console.log(`how to cure ${modifiedString}`);
+    }
+
+    // console.log(plant, '<<<detailll');
     // console.log(id, '<<<<');
+    // console.log(plant.disease, '<<<<');
     return (
-        <ScrollView style={styles.mainContainer}>
-            <View style={styles.titleContainer}>
-                <Text style={styles.title}>{plant?.Plant?.name}</Text>
-                <Text style={styles.contributor}>{userProfile.username}</Text>
-                <View style={styles.imageContainer}>
-                    <Image
-                        style={styles.plantImage}
-                        // source={{ uri: `${myPlantData.image}` }}
-                        source={{uri: `${plant.imgUrl}`}}
-                        resizeMethod='contain'
-                    />
-                </View>
-                <Text style={styles.paragraph}>{plant?.Plant?.description}</Text>
-                <TouchableOpacity
-                    style={{ alignItems: 'center', marginTop: 16 }}
-                    onPress={pickImage}
-                >
-                    <ThirdButton title={'Diagnose Plant'} />
-                </TouchableOpacity>
-                {/* <TouchableOpacity style={{ alignItems: 'center', marginTop:16 }}>
+        <ScrollView >
+            <View style={styles.mainContainer}>
+                <View style={styles.titleContainer}>
+                    <Text style={styles.title}>{plant?.Plant?.name}</Text>
+                    <Text style={styles.contributor}>{userProfile.username}</Text>
+                    <View style={styles.imageContainer}>
+                        <Image
+                            style={styles.plantImage}
+                            // source={{ uri: `${myPlantData.image}` }}
+                            source={{ uri: `${plant.imgUrl}` }}
+                            resizeMethod='contain'
+                        />
+                    </View>
+                    <Text style={styles.paragraph}>{plant?.Plant?.description}</Text>
+                    {
+                        plant.disease &&
+                        <TouchableOpacity
+                            onPress={() => {
+                                getQuestion(plant?.disease)
+                            }}
+                        >
+                            <View
+                                style={{
+                                    // borderWidth: 1,
+                                    borderRadius: 10,
+                                    flexDirection: 'row',
+                                    justifyContent: 'center',
+                                    alignContent: 'center',
+                                    alignItems: 'center',
+                                    gap: 8,
+                                    marginTop: 16,
+                                    backgroundColor: '#E6283D',
+                                    padding: 12,
+                                    // width: width * 0.7
+                                }}
+                            >
+                                <FontAwesome5 name="skull-crossbones" size={24} color="white" />
+                                <View style={{
+                                    alignContent: 'center',
+                                    justifyContent: 'center',
+                                    alignItems: 'center'
+                                }}>
+                                    <Text style={{
+                                        fontFamily: "Karla_500Medium",
+                                        fontSize: 12,
+                                        color: 'white'
+                                    }}>your plant is infected with: </Text>
+                                    <Text style={{
+                                        fontFamily: "Karla_500Medium",
+                                        fontSize: 16,
+                                        color: 'white'
+                                    }}>{plant?.disease.replace(/[_\,]+/g, ' ').trim()}</Text>
+                                    <Text style={{
+                                        fontFamily: "Karla_500Medium",
+                                        fontSize: 12,
+                                        color: 'white'
+                                    }}>Tap to ask green robot</Text>
+                                </View>
+                            </View>
+                        </TouchableOpacity>
+                    }
+                    <TouchableOpacity
+                        style={{ alignItems: 'center', marginTop: 16 }}
+                        onPress={pickImage}
+                    >
+                        <ThirdButton title={'Diagnose Plant'} />
+                    </TouchableOpacity>
+                    {/* <TouchableOpacity style={{ alignItems: 'center', marginTop:16 }}>
                     <View style={{
                         borderWidth: 1,
                         // width: 175,
@@ -155,6 +215,8 @@ const MyPlantDetail = ({ navigation }) => {
                         </Text>
                     </View>
                 </TouchableOpacity> */}
+
+                </View>
             </View>
         </ScrollView>
     )
@@ -167,9 +229,10 @@ const styles = StyleSheet.create({
         // flex: 1,
         padding: 16,
         // gap: 8
-        height: height * 1.5,
-        // marginBottom: 70
+        height: height * 1.1,
+        // marginBottom: 70,
         // paddingBottom: 20
+        backgroundColor: 'white',
     },
     title: {
         color: "#000",
@@ -205,8 +268,8 @@ const styles = StyleSheet.create({
         fontSize: 14,
         letterSpacing: 0,
         lineHeight: 16,
-        fontFamily: "Karla_400Regular",
-        // fontFamily: "Karla_500Medium",
+        // fontFamily: "Karla_400Regular",
+        fontFamily: "Karla_500Medium",
     },
     buttonImage: {
         height: 26,

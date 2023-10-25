@@ -79,7 +79,7 @@ export default function App() {
 
   return (
     // <SafeAreaView>
-    <UserContext.Provider value={{ user, setUser, userProfile }}>
+    <UserContext.Provider value={{ user, setUser, userProfile, setUserProfile }}>
       <NavigationContainer>
         <Stack.Navigator>
           {!user ? (
@@ -106,7 +106,7 @@ export default function App() {
                 name="PromoDetail"
                 component={PromoDetail}
                 options={{
-                  headerShown: false,
+                  // headerShown: false,
                   mode: "modal",
                 }}
               />

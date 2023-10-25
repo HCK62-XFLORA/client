@@ -39,10 +39,10 @@ const Login = ({ navigation }) => {
         url: BASE_URL + "/users/login",
         data: { email, password },
       });
-      const access_token = await SecureStore.setItemAsync("access_token",data.access_token);
-      const id = await SecureStore.setItemAsync("UserId", data.id.toString());
+      await SecureStore.setItemAsync("access_token", data.access_token);
+      await SecureStore.setItemAsync("UserId", data.id.toString());
       // rubah nilai contextnya kalo di redux nge dispatch action
-      setUser({ access_token, id });
+      setUser({ access_token: data.access_token, id: data.id.toString() });
     } catch (error) {
       console.error(error);
     }

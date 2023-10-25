@@ -1,56 +1,13 @@
-import { StyleSheet, Text, View, FlatList, ScrollView, TouchableOpacity, Image, Dimensions } from 'react-native'
+import { StyleSheet, Text, View, FlatList, ScrollView, TouchableOpacity, Image, Dimensions, Button } from 'react-native'
 import React, { useContext, useEffect, useState } from 'react'
-import { Button } from "react-native-paper";
+// import { Button } from "react-native-paper";
 import UserCard from '../components/UserCard'
 import ThreadHome from '../components/Thread/ThreadHome'
 import axios from "axios";
+import { AntDesign } from '@expo/vector-icons';
 import { UserContext } from "../stores/UserContext";
 
 
-const threadsData = [
-  {
-    image: require("../../assets/MyPlantCard/card1.png"),
-    title: "My Plant 1",
-    description:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla fermentum odio id ",
-    category: "Disease",
-  },
-  {
-    image: require("../../assets/MyPlantCard/card2.png"),
-    title: "My Plant 2",
-    description:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla fermentum odio id ",
-    category: "Story",
-  },
-  {
-    image: require("../../assets/MyPlantCard/card3.png"),
-    title: "My Plant 3",
-    description:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla fermentum odio id ",
-    category: "Tips & Trick",
-  },
-  {
-    image: require("../../assets/MyPlantCard/card2.png"),
-    title: "My Plant 2",
-    description:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla fermentum odio id ",
-    category: "Story",
-  },
-  {
-    image: require("../../assets/MyPlantCard/card2.png"),
-    title: "My Plant 2",
-    description:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla fermentum odio id ",
-    category: "Story",
-  },
-  {
-    image: require("../../assets/MyPlantCard/card2.png"),
-    title: "My Plant 2",
-    description:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla fermentum odio id ",
-    category: "Story",
-  },
-];
 
 const categories = [
   {
@@ -77,7 +34,7 @@ const Threads = ({ navigation }) => {
   const fetchThreads = async () => {
     try {
       const { data } = await axios({
-        url: "https://wadinodev.com/threads?nthThreads=2",
+        url: "https://wadinodev.com/threads?nthThreads=1",
         method: "GET",
         headers: { access_token: user.access_token },
       });
@@ -134,7 +91,7 @@ const Threads = ({ navigation }) => {
             <TouchableOpacity
               style={styles.categoryContainer}
               onPress={() => {
-               console.log(item.title);
+                console.log(item.title);
               }}>
               <Text>{item.title}</Text>
             </TouchableOpacity>
@@ -151,20 +108,35 @@ const Threads = ({ navigation }) => {
           }}
         />
         <Text style={styles.sectionTitle}>Featured Threads</Text>
-        <Button
+        <TouchableOpacity
           style={{
             // flex:1,
+            // marginTop: 12,
             marginHorizontal: 20,
-            marginBottom: 16,
-            paddingLeft: 16,
-            paddingRight: 16,
+            // marginBottom: 16,
+            // paddingLeft: 16,
+            // paddingRight: 16,
+            padding: 8,
+            borderWidth: 1,
+            borderRadius: 10,
+            // alignItems: 'center',
+            justifyContent: 'center',
+            flexDirection: 'row',
+            borderColor: '#06674B',
+            gap: 8
           }}
-          textColor="#898989"
-          icon="message-plus"
-          mode="outlined"
+
           onPress={() => navigation.navigate("AddThreads")}>
-          Add Thread
-        </Button>
+          <AntDesign name="plus" size={16} color="#06674B" />
+          <Text
+            style={{
+              fontFamily: 'Karla_500Medium',
+              color: '#06674B'
+            }}
+          >
+            Add Thread
+          </Text>
+        </TouchableOpacity>
         <FlatList
           data={threads}
           renderItem={({ item }) => (
@@ -206,7 +178,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     borderTopLeftRadius: 10,
     borderTopRightRadius: 10,
-    gap: 8,
+    gap: 16,
   },
   sectionTitle: {
     color: "#000000",
