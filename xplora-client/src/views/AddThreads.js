@@ -15,17 +15,27 @@ import ThirdButton from "../components/Buttons/ThirdButton";
 import * as ImagePicker from "expo-image-picker";
 import axios from "axios";
 import { UserContext } from "../stores/UserContext";
+import SelectDropdown from "react-native-select-dropdown";
+import FontAwesome from "react-native-vector-icons/FontAwesome";
+import Toast from "react-native-toast-message";
 
 const BASE_URL = `https://wadinodev.com`;
 
-const AddThread = () => {
+const AddThread = ({ navigation }) => {
   const [title, onChangTitle] = React.useState("");
   const [description, onChangDescription] = React.useState("");
   const [image, setImage] = React.useState();
+  const [ForumId, setForumId] = React.useState();
 
-  const route = useRoute();
+  const category = [
+    { id: 1, name: "Tips & Trick" },
+    { id: 2, name: "Disease" },
+    { id: 3, name: "Stories" },
+  ];
+
+  // const route = useRoute();
   // const id = route.params.id
-  const { user } = useContext(UserContext);
+  const { user, fetchUser } = useContext(UserContext);
 
   const pickImage = async () => {
     try {
@@ -37,46 +47,60 @@ const AddThread = () => {
       });
       let localUri = result.uri;
       let filename = localUri.split("/").pop();
-
       // Infer the type of the image
       let match = /\.(\w+)$/.exec(filename);
       let type = match ? `image/${match[1]}` : `image`;
-      const formData = new FormData();
-      // console.log(result.uri);
-      formData.append("image", image);
 
-      setImage(formData);
-
-      if (!result.canceled) {
-        setImage(result.assets[0].uri);
-      }
+      setImage({ uri: result.uri, name: filename, type });
     } catch (error) {
-      console.log(error, "<<<predicr");
+      console.log(error, "<<<pickimage");
     }
     // No permissions request is necessary for launching the image library
   };
 
-  const postThreads = async (title, content, image) => {
+  const postThreads = async () => {
     try {
-      console.log("🚀 ~ file: AddThreads.js:63 ~ postThreads ~ image:", image)
+      const formData = new FormData();
+      formData.append("title", title);
+      formData.append("content", description);
+      formData.append("image", image);
+      formData.append("ForumId", ForumId);
+
       const { data } = await axios({
         method: "POST",
         url: BASE_URL + "/threads",
-        data: { title, content, image },
+        data: formData,
         headers: {
           access_token: user.access_token,
+          "Content-Type": "multipart/form-data",
         },
       });
-      navigation.navigate("Threads");
+      fetchUser();
+      Toast.show({
+        type: "success",
+        position: "top",
+        text1: "Thread added!",
+        visibilityTime: 1000,
+        autoHide: true,
+        onShow: () => {},
+        onHide: () => {
+          navigation.navigate("Profile");
+        },
+      });
     } catch (error) {
-      console.error(error);
+      Toast.show({
+        type: "error",
+        position: "top",
+        text1: "Ops, Something when wrong!",
+        text2: `${error}`,
+        visibilityTime: 2000,
+        autoHide: true,
+      });
     }
   };
 
   return (
     <>
-      {/* <Text>title: {title}</Text>
-      <Text>description: {description}</Text> */}
       <View style={styles.mainContainer}>
         <Text style={styles.header}>Add Thread</Text>
         <View style={styles.inputContainer}>
@@ -85,6 +109,38 @@ const AddThread = () => {
             style={styles.titleInput}
             onChangeText={onChangTitle}
             value={title}
+          />
+        </View>
+        <View style={styles.inputContainer}></View>
+        <Text style={styles.label}>Category</Text>
+        <View style={styles.dropdownContainer}>
+          <SelectDropdown
+            data={category}
+            onSelect={(selectedItem) => {
+              setForumId(selectedItem.id);
+            }}
+            defaultButtonText={"Select Category"}
+            buttonTextAfterSelection={(selectedItem) => {
+              return selectedItem.name;
+            }}
+            rowTextForSelection={(item) => {
+              return item.name;
+            }}
+            buttonStyle={styles.dropdown1BtnStyle}
+            buttonTextStyle={styles.dropdown1BtnTxtStyle}
+            renderDropdownIcon={(isOpened) => {
+              return (
+                <FontAwesome
+                  name={isOpened ? "chevron-up" : "chevron-down"}
+                  color={"#444"}
+                  size={18}
+                />
+              );
+            }}
+            dropdownIconPosition={"right"}
+            dropdownStyle={styles.dropdown1DropdownStyle}
+            rowStyle={styles.dropdown1RowStyle}
+            rowTextStyle={styles.dropdown1RowTxtStyle}
           />
         </View>
         <View style={styles.inputContainer}>
@@ -112,9 +168,7 @@ const AddThread = () => {
         </View>
 
         <View style={styles.buttonContainer}>
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() => postThreads(title, description, image)}>
+          <TouchableOpacity style={styles.button} onPress={() => postThreads()}>
             <Text style={styles.buttonText}>Post Thread</Text>
           </TouchableOpacity>
         </View>
@@ -136,16 +190,19 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     gap: 6,
   },
+  dropdownContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    paddingVertical: 10,
+  },
   titleInput: {
     height: 40,
-    // margin: 5,
     borderWidth: 1,
     borderRadius: 5,
     padding: 10,
   },
   descriptionInput: {
-    // height: 132,
-    // margin: 12,
     borderWidth: 1,
     borderRadius: 5,
     padding: 10,
@@ -208,5 +265,27 @@ const styles = StyleSheet.create({
   addIcon: {
     height: 20,
     width: 20,
+  },
+  dropdown1BtnStyle: {
+    flex: 1,
+    borderRadius: 5,
+    borderWidth: 1,
+  },
+  dropdown1BtnTxtStyle: {
+    fontFamily: "Karla_500Medium",
+    color: "#898989",
+    fontSize: 14,
+    textAlign: "left",
+  },
+  dropdown1DropdownStyle: { backgroundColor: "#EFEFEF" },
+  dropdown1RowStyle: {
+    backgroundColor: "#EFEFEF",
+    borderBottomColor: "#C5C5C5",
+  },
+  dropdown1RowTxtStyle: {
+    fontFamily: "Karla_500Medium",
+    color: "#898989",
+    fontSize: 14,
+    textAlign: "left",
   },
 });

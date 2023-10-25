@@ -18,7 +18,8 @@ import {
 } from "@expo-google-fonts/karla";
 import SelectDropdown from "react-native-select-dropdown";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
-import axios from 'axios';
+import axios from "axios";
+import Toast from "react-native-toast-message";
 
 const BASE_URL = `https://wadinodev.com`;
 
@@ -42,10 +43,27 @@ const Register = ({ navigation }) => {
         url: BASE_URL + "/users/register",
         data: { username, email, password, gender },
       });
-      console.log(data);
-      navigation.navigate("Login");
+      Toast.show({
+        type: "success",
+        position: "top",
+        text1: "Register Success!",
+        text2: "Welcome for greener earth!",
+        visibilityTime: 1000,
+        autoHide: true,
+        onShow: () => {},
+        onHide: () => {
+          navigation.navigate("Login");
+        },
+      });
     } catch (error) {
-      console.error(error);
+      Toast.show({
+        type: "error",
+        position: "top",
+        text1: "Ops, Something when wrong!",
+        text2: `${error}`,
+        visibilityTime: 2000,
+        autoHide: true,
+      });
     }
   };
 

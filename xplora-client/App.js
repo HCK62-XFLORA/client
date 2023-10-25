@@ -23,6 +23,7 @@ import AskAi from "./src/views/AskAi";
 import MyVoucher from "./src/views/MyVoucher";
 import axios from "axios";
 import PromoDetail from "./src/views/PromoDetail";
+import Toast from "react-native-toast-message";
 
 const Stack = createNativeStackNavigator();
 
@@ -79,7 +80,10 @@ export default function App() {
 
   return (
     // <SafeAreaView>
-    <UserContext.Provider value={{ user, setUser, userProfile, setUserProfile }}>
+
+    <UserContext.Provider
+      value={{ user, setUser, userProfile, setUserProfile, fetchUser }}>
+
       <NavigationContainer>
         <Stack.Navigator>
           {!user ? (
@@ -114,6 +118,7 @@ export default function App() {
           )}
         </Stack.Navigator>
       </NavigationContainer>
+      <Toast />
     </UserContext.Provider>
   );
 }

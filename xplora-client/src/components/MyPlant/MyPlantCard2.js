@@ -6,7 +6,7 @@ const MyPlantHome = ({ item }) => {
     <View style={styles.container}>
       <Image
         source={{
-          uri: item?.Plant.imgUrl,
+          uri: item?.imgUrl,
         }}
         resizeMode="cover"
         style={styles.image}

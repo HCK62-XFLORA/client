@@ -1,3 +1,4 @@
+
 import { ScrollView, TouchableOpacity, StyleSheet, Text, View, Image, FlatList, LogBox } from 'react-native'
 import React, { useContext } from 'react'
 import ThreadHome from '../components/Thread/ThreadHome'
@@ -82,13 +83,12 @@ const Profile = ({navigation}) => {
   return (
     <ScrollView
       style={styles.mainContainer}
-      showsVerticalScrollIndicator={false}
-    >
+      showsVerticalScrollIndicator={false}>
       <View style={styles.userContentContainer}>
         <View style={styles.userContainer}>
           <Image
             style={styles.userImage}
-            source={require('../../assets/Profile/User-pict.png')}
+            source={require("../../assets/Profile/User-pict.png")}
           />
           <View>
             <Text style={styles.userText}>{userProfile?.username}</Text>
@@ -121,8 +121,8 @@ const Profile = ({navigation}) => {
         </View>
         <Image
           style={styles.illustration}
-          source={require('../../assets/Illustration/rumah-illustration.png')}
-          resizeMode='contain'
+          source={require("../../assets/Illustration/rumah-illustration.png")}
+          resizeMode="contain"
         />
       </View>
       <View style={styles.pointContainer}>
@@ -149,9 +149,8 @@ const Profile = ({navigation}) => {
           </View>
         </View>
         <TouchableOpacity
-         style={styles.pointContentContainer}
-         onPress={()=> navigation.navigate('MyVoucher')}
-         >
+          style={styles.pointContentContainer}
+          onPress={() => navigation.navigate("MyVoucher")}>
           <Text style={styles.levelText}>Vouchers</Text>
           <View style={styles.levelContent}>
             <Image
@@ -167,37 +166,38 @@ const Profile = ({navigation}) => {
         <View style={{ gap: 8 }}>
           <Text style={styles.sectionTitle}>My Plant</Text>
           <FlatList
-            data={userProfile?.MyPlants}
-            renderItem={({ item }) =>
+            data={userProfile?.MyPlants.sort((a, b) =>
+              b.createdAt.localeCompare(a.createdAt)
+            )}
+            renderItem={({ item }) => (
               <TouchableOpacity
                 onPress={() => {
-                  navigation.navigate("MyPlantDetail", { id: item.id })
+                  navigation.navigate("MyPlantDetail", { id: item.id });
                 }}>
                 <MyPlantCard2 item={item} />
               </TouchableOpacity>
-            }
+            )}
             showsVerticalScrollIndicator={false}
             numColumns={2}
             style={{
-              // flex:1, 
-              overflow: 'hidden',
+              // flex:1,
+              overflow: "hidden",
               marginBottom: 16,
               paddingLeft: 16,
               paddingRight: 16,
-              // alignContent: 'space-between'
             }}
           />
         </View>
         <Text style={styles.sectionTitle}>My Thread</Text>
         <FlatList
-          data={userProfile?.Threads}
+          data={userProfile?.Threads.sort((a, b) =>
+            b.createdAt.localeCompare(a.createdAt)
+          )}
           nestedScrollEnabled={true}
-          renderItem={({ item }) =>
-            <ThreadHome item={item} />
-          }
+          renderItem={({ item }) => <ThreadHome item={item} />}
           style={{
-            // flex:1, 
-            overflow: 'hidden',
+            // flex:1,
+            overflow: "hidden",
             marginBottom: 16,
             paddingLeft: 16,
             paddingRight: 8,
@@ -205,16 +205,14 @@ const Profile = ({navigation}) => {
         />
       </View>
     </ScrollView>
-  )
-}
+  );
+};
 
-export default Profile
+export default Profile;
 
 const styles = StyleSheet.create({
   mainContainer: {
-    backgroundColor: '#DEEAE5',
-    // padding: 16,
-    // gap: 8
+    backgroundColor: "#DEEAE5",
   },
   userImage: {
     position: "relative",
@@ -235,46 +233,44 @@ const styles = StyleSheet.create({
     fontFamily: "Karla_500Medium",
   },
   userContainer: {
-    gap: 8
+    gap: 8,
   },
   illustration: {
-    height: 146
+    height: 146,
   },
   userContentContainer: {
-    flexDirection: 'row',
-    alignContent: 'center',
-    alignItems: 'flex-end',
+    flexDirection: "row",
+    alignContent: "center",
+    alignItems: "flex-end",
     paddingTop: 16,
     paddingLeft: 16,
     paddingRight: 16,
   },
   pointContainer: {
     height: 100,
-    backgroundColor: 'white',
+    backgroundColor: "white",
     borderRadius: 10,
     marginTop: 8,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between",
     paddingRight: 16,
     paddingLeft: 16,
-    // alignContent:'center'
-    alignItems: 'center',
+    alignItems: "center",
     gap: 22,
-    margin: 16
+    margin: 16,
   },
   pointImage: {
-    // position: "relative",
     width: 18,
     height: 18,
   },
   levelContent: {
-    flexDirection: 'row',
-    gap: 4
+    flexDirection: "row",
+    gap: 4,
   },
   pointContentContainer: {
-    alignContent: 'center',
-    alignItems: 'center',
-    gap: 8
+    alignContent: "center",
+    alignItems: "center",
+    gap: 8,
   },
   levelText: {
     color: "#898989",
@@ -293,18 +289,15 @@ const styles = StyleSheet.create({
     fontSize: 18,
     letterSpacing: 0,
     fontFamily: "Karla_500Medium",
-    paddingLeft: 16
-    // fontWeight:600
+    paddingLeft: 16,
   },
   bottomContainer: {
-    // top: 420,
-    // height: 100,
     marginTop: 8,
     paddingTop: 16,
-    // backgroundColor: '#F7F9F6',
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
     borderTopLeftRadius: 10,
     borderTopRightRadius: 10,
+
     gap: 8
   },
   addPlantButton: {
@@ -326,3 +319,4 @@ const styles = StyleSheet.create({
     // marginLeft: 4
   },
 })
+
