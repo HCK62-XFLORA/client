@@ -5,7 +5,7 @@ const MyPlantHome = ({ item }) => {
     // console.log(item, '<<<');
     return (
         <View style={styles.container}>
-            <Image source={{ uri: `${item.imgUrl}` }}
+            <Image source={{ uri: `${item?.imgUrl}` }}
                 resizeMode="cover"
                 style={styles.image}
             />

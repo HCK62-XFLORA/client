@@ -1,11 +1,19 @@
-import { StyleSheet, Text, View, FlatList, ScrollView, TouchableOpacity, Image, Dimensions } from 'react-native'
-import React, { useContext, useEffect, useState } from 'react'
+import {
+  StyleSheet,
+  Text,
+  View,
+  FlatList,
+  ScrollView,
+  TouchableOpacity,
+  Image,
+  Dimensions,
+} from "react-native";
+import React, { useContext, useEffect, useState } from "react";
 import { Button } from "react-native-paper";
-import UserCard from '../components/UserCard'
-import ThreadHome from '../components/Thread/ThreadHome'
+import UserCard from "../components/UserCard";
+import ThreadHome from "../components/Thread/ThreadHome";
 import axios from "axios";
 import { UserContext } from "../stores/UserContext";
-
 
 const threadsData = [
   {
@@ -54,15 +62,19 @@ const threadsData = [
 
 const categories = [
   {
+    id: "",
     title: "All",
   },
   {
+    id: 1,
     title: "Tips & Trick",
   },
   {
+    id: 2,
     title: "Disease",
   },
   {
+    id: 3,
     title: "Stories",
   },
 ];
@@ -70,14 +82,16 @@ const categories = [
 const { width, height } = Dimensions.get("screen");
 
 const Threads = ({ navigation }) => {
-  const [threads, setThreads] = useState([]);
+  const [threads, setThreads] = useState();
+  const [ForumId, setForumId] = useState("");
+  console.log("🚀 ~ file: Threads.js:79 ~ Threads ~ ForumId:", ForumId);
 
   const { user, userProfile, setUser } = useContext(UserContext);
 
   const fetchThreads = async () => {
     try {
       const { data } = await axios({
-        url: "https://wadinodev.com/threads?nthThreads=2",
+        url: "https://wadinodev.com/threads?nthThreads=1&ForumId=" + ForumId,
         method: "GET",
         headers: { access_token: user.access_token },
       });
@@ -92,9 +106,7 @@ const Threads = ({ navigation }) => {
 
   useEffect(() => {
     fetchThreads();
-  }, []);
-
-  // console.log(threads, '<<<<');
+  }, [ForumId]);
 
   return (
     <ScrollView
@@ -134,7 +146,7 @@ const Threads = ({ navigation }) => {
             <TouchableOpacity
               style={styles.categoryContainer}
               onPress={() => {
-               console.log(item.title);
+                setForumId(item.id);
               }}>
               <Text>{item.title}</Text>
             </TouchableOpacity>
@@ -150,7 +162,6 @@ const Threads = ({ navigation }) => {
             marginRight: 8,
           }}
         />
-        <Text style={styles.sectionTitle}>Featured Threads</Text>
         <Button
           style={{
             // flex:1,
@@ -165,8 +176,9 @@ const Threads = ({ navigation }) => {
           onPress={() => navigation.navigate("AddThreads")}>
           Add Thread
         </Button>
+        <Text style={styles.sectionTitle}>Featured Threads</Text>
         <FlatList
-          data={threads}
+          data={threads?.sort((a, b) => b.createdAt.localeCompare(a.createdAt))}
           renderItem={({ item }) => (
             <TouchableOpacity
               onPress={() => {

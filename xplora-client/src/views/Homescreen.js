@@ -24,56 +24,6 @@ import Pagination from "../components/Promo/Pagination";
 import PromoDetail from "./PromoDetail";
 import { ActivityIndicator } from "react-native-paper";
 
-// const myPlantData = [
-//   {
-//     image: require("../../assets/MyPlantCard/card1.png"),
-//     text: "My Plant 1",
-//   },
-//   {
-//     image: require("../../assets/MyPlantCard/card2.png"),
-//     text: "My Plant 2",
-//   },
-//   {
-//     image: require("../../assets/MyPlantCard/card3.png"),
-//     text: "My Plant 3",
-//   },
-//   {
-//     image: require("../../assets/MyPlantCard/card2.png"),
-//     text: "My Plant 2",
-//   },
-// ];
-
-// const threadsData = [
-//   {
-//     image: require("../../assets/MyPlantCard/card1.png"),
-//     title: "My Plant 1",
-//     description:
-//       "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla fermentum odio id ",
-//     category: "Disease",
-//   },
-//   {
-//     image: require("../../assets/MyPlantCard/card2.png"),
-//     title: "My Plant 2",
-//     description:
-//       "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla fermentum odio id ",
-//     category: "Story",
-//   },
-//   {
-//     image: require("../../assets/MyPlantCard/card3.png"),
-//     title: "My Plant 3",
-//     description:
-//       "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla fermentum odio id ",
-//     category: "Tips & Trick",
-//   },
-//   {
-//     image: require("../../assets/MyPlantCard/card2.png"),
-//     title: "My Plant 2",
-//     description:
-//       "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla fermentum odio id ",
-//     category: "Story",
-//   },
-// ];
-
 const Homescreen = ({ navigation }) => {
   const [refreshing, setRefreshing] = React.useState(false);
   const onRefresh = React.useCallback(() => {
@@ -92,8 +42,6 @@ const Homescreen = ({ navigation }) => {
   const [selectedPromoCard, setSelectedPromoCard] = useState(null);
 
   const { user, userProfile, setUser } = useContext(UserContext);
-
-  // console.log(userProfile, '<<<userHome Screen');
 
   const scrollX = useRef(new Animated.Value(0)).current
 
@@ -208,24 +156,6 @@ const Homescreen = ({ navigation }) => {
     fetchRewards()
   }, [])
 
-  // console.log(rewards, '<<<home reward');
-
-  // useEffect(() => {
-  //   fetchPlants();
-  // }, []);
-
-
-
-  // useEffect(() => {
-  //   getUser();
-  // }, []);
-
-  // console.log(threads, '<<<<');
-  // console.log(user, '<<<<');
-  // console.log(plants[0].Plant.name, '<<<<');
-  // console.log(plants, '<<<<honeee');
-
-  // console.log(threads, '<<<<<< homeeeee');
   return (
     <>
       {isLoading ?
@@ -242,34 +172,15 @@ const Homescreen = ({ navigation }) => {
             backgroundColor: "#DEEAE5",
           }}
           showsVerticalScrollIndicator={false}>
-          {/* <Button
+          <Button
             onPress={() => {
               handleLogout();
             }}
             title="logout"
             color="tomato"
             accessibilityLabel="Submit button"
-          /> */}
-          {/* <FlatList
-        data={myPlantData}
-        renderItem={({ item }) =>
-          <TouchableOpacity
-            onPress={() => {
-              navigation.navigate("MyPlantDetail", { id: item.id })
-            }}>
-            <MyPlantHome item={item} />
-          </TouchableOpacity>
-        }
-        horizontal={true}
-        showsHorizontalScrollIndicator={false}
-        style={{
-          // flex:1, 
-          overflow: 'hidden',
-          marginBottom: 16,
-          paddingLeft: 16,
-          paddingRight: 16
-        }}
-      /> */}
+          />
+         
           {/* top container  */}
           <View style={homeStyles.topContainer}>
             <UserCard />
@@ -302,7 +213,7 @@ const Homescreen = ({ navigation }) => {
             <View style={homeStyles.myPlantSectionContainer}>
               <Text style={homeStyles.sectionTitle}>My Plant</Text>
               <FlatList
-                data={userProfile?.MyPlants}
+                data={userProfile?.MyPlants.sort((a, b) => b.createdAt.localeCompare(a.createdAt))}
                 nestedScrollEnabled={true}
                 renderItem={({ item }) => (
                   <TouchableOpacity

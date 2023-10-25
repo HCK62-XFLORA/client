@@ -20,6 +20,8 @@ import VoucherCard from "../components/VoucherCard";
 import * as SecureStore from "expo-secure-store";
 import axios from "axios";
 import { UserContext } from "../stores/UserContext";
+import Toast from "react-native-toast-message";
+import LottieView from "lottie-react-native";
 
 const BASE_URL = `https://wadinodev.com`;
 
@@ -39,12 +41,29 @@ const Login = ({ navigation }) => {
         url: BASE_URL + "/users/login",
         data: { email, password },
       });
-      const access_token = await SecureStore.setItemAsync("access_token",data.access_token);
-      const id = await SecureStore.setItemAsync("UserId", data.id.toString());
-      // rubah nilai contextnya kalo di redux nge dispatch action
-      setUser({ access_token, id });
+      await SecureStore.setItemAsync("access_token", data.access_token);
+      await SecureStore.setItemAsync("UserId", data.id.toString());
+      Toast.show({
+        type: "success",
+        position: "top",
+        text1: "Login Successfully!",
+        text2: "Happy Planting!",
+        visibilityTime: 1000,
+        autoHide: true,
+        onShow: () => {},
+        onHide: () => {
+          setUser({ access_token: data.access_token, UserId: data.id });
+        },
+      });
     } catch (error) {
-      console.error(error);
+      Toast.show({
+        type: "error",
+        position: "top",
+        text1: "Ops, Something when wrong!",
+        text2: `${error}`,
+        visibilityTime: 3000,
+        autoHide: true,
+      });
     }
   };
 
@@ -55,10 +74,18 @@ const Login = ({ navigation }) => {
   if (!fontsLoaded && !fontError) {
     return null;
   }
+
   return (
     <>
       <View style={styles.mainContainer}>
         {/* <Image source={require("../../assets/logo.png")} style={styles.image} /> */}
+        {/* <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+          <LottieView
+            source={require("../../assets/animation/welcome_animation.json")}
+            autoPlay
+            loop
+          />
+        </View> */}
         <Text style={styles.header}>Welcome back!</Text>
         <View style={styles.inputContainer}>
           <TextInput
@@ -68,6 +95,7 @@ const Login = ({ navigation }) => {
             label="Email"
             placeholder="Please Input your email"
             value={email}
+            // error={true}
             onChangeText={(email) => setEmail(email)}
           />
         </View>
@@ -114,13 +142,6 @@ const Login = ({ navigation }) => {
           </Pressable>
         </View>
       </View>
-      {/* <Button
-        style={styles.buttonSubmit}
-        onPress={() => navigation.navigate("AddMyPlant")}
-        title="Add Threads"
-        color="#06674b"
-        accessibilityLabel="Submit button"
-      /> */}
     </>
   );
 };
@@ -131,7 +152,6 @@ const styles = StyleSheet.create({
   header: {
     textAlign: "center",
     fontSize: 21,
-    // color: theme.colors.primary,
     fontWeight: "bold",
     paddingVertical: 12,
     letterSpacing: 0,
@@ -168,7 +188,7 @@ const styles = StyleSheet.create({
     width: 110,
     height: 110,
     marginBottom: 8,
-    borderRadius: 30,
+    // borderRadius: 30,
   },
   buttonContainer: {
     alignItems: "center",

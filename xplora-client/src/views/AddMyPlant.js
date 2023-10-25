@@ -15,13 +15,47 @@ import SelectDropdown from "react-native-select-dropdown";
 import React, { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { UserContext } from "../stores/UserContext";
+import * as ImagePicker from "expo-image-picker";
+import Toast from "react-native-toast-message";
 
-const AddMyPlant = () => {
+const BASE_URL = `https://wadinodev.com`;
+
+const AddMyPlant = ({ navigation }) => {
   const [plantName, setPlantName] = React.useState("");
-  console.log("🚀 ~ file: AddMyPlant.js:21 ~ AddMyPlant ~ plantName:", plantName)
+  const [PlantId, setPlantId] = React.useState();
+  console.log("🚀 ~ file: AddMyPlant.js:22 ~ AddMyPlant ~ PlantId:", PlantId);
   const [description, onChangDescription] = React.useState("");
+  const [image, setImage] = React.useState();
   const [plantData, setPlantData] = useState(null);
-  const { user } = useContext(UserContext);
+  const { user, fetchUser } = useContext(UserContext);
+
+  const pickImage = async () => {
+    try {
+      let result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.All,
+        allowsEditing: true,
+        aspect: [4, 3],
+        quality: 1,
+      });
+      let localUri = result.uri;
+      let filename = localUri.split("/").pop();
+      // Infer the type of the image
+      let match = /\.(\w+)$/.exec(filename);
+      let type = match ? `image/${match[1]}` : `image`;
+
+      setImage({ uri: result.uri, name: filename, type });
+    } catch (error) {
+      Toast.show({
+        type: "error",
+        position: "top",
+        text1: "Ops, Something when wrong!",
+        text2: `${error}`,
+        visibilityTime: 2000,
+        autoHide: true,
+      });
+    }
+    // No permissions request is necessary for launching the image library
+  };
 
   const fetchPlants = async () => {
     try {
@@ -33,28 +67,56 @@ const AddMyPlant = () => {
       setPlantData(data);
       return data;
     } catch (error) {
-      console.log(error);
+      console.log("AddMyPlant.js:63 ~ error:", error);
     }
   };
 
-  useEffect(() => {
-    fetchPlants().then((data) => {
-      setSelectedPlant(data[0]); // Set the default selected plant
-    });
-  }, []);
+  const postMyPlant = async () => {
+    try {
+      const formData = new FormData();
+      formData.append("PlantId", PlantId);
+      formData.append("image", image);
+
+      const { data } = await axios({
+        method: "POST",
+        url: BASE_URL + "/users/my-plant",
+        data: formData,
+        headers: {
+          access_token: user.access_token,
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      fetchUser();
+      Toast.show({
+        type: "success",
+        position: "top",
+        text1: "Plant added!",
+        visibilityTime: 1000,
+        autoHide: true,
+        onShow: () => {},
+        onHide: () => {
+          navigation.navigate("Profile");
+        },
+      });
+    } catch (error) {
+      Toast.show({
+        type: "error",
+        position: "top",
+        text1: "Ops, Something when wrong!",
+        text2: `${error}`,
+        visibilityTime: 2000,
+        autoHide: true,
+      });
+    }
+  };
 
   const handlePlantChange = (selectedItem) => {
     setSelectedPlant(selectedItem);
   };
 
-  // const countries = [
-  //   "Kaktus",
-  //   "Monstera",
-  //   "Canabis",
-  //   "English Lavender",
-  //   "Opium",
-  //   "Aglonema",
-  // ];
+  useEffect(() => {
+    fetchPlants();
+  }, []);
   return (
     <>
       <View style={styles.mainContainer}>
@@ -64,8 +126,9 @@ const AddMyPlant = () => {
           <SelectDropdown
             data={plantData}
             onSelect={(selectedItem, index) => {
-              setPlantName(selectedItem.name)
-              onChangDescription(selectedItem.description)
+              // setPlantName(selectedItem.name);
+              setPlantId(selectedItem.id);
+              onChangDescription(selectedItem.description);
             }}
             defaultButtonText={"Select Plant"}
             buttonTextAfterSelection={(selectedItem, index) => {
@@ -102,9 +165,11 @@ const AddMyPlant = () => {
         <Text style={styles.label}>Description</Text>
         <View style={styles.inputContainer}>
           <TextInput
-            editable
+            editable={false}
+            scrollEnabled={true}
             multiline
             numberOfLines={8}
+            cursorColor={'#06674b'}
             style={styles.descriptionInput}
             // onChangeText={onChangDescription}
             value={description}
@@ -114,11 +179,7 @@ const AddMyPlant = () => {
         </View>
 
         <View style={styles.buttonContainer}>
-          <TouchableOpacity
-            style={styles.buttonAddCover}
-            onPress={() => {
-              console.log("add image");
-            }}>
+          <TouchableOpacity style={styles.buttonAddCover} onPress={pickImage}>
             <View style={styles.buttonContent}>
               <Image
                 style={styles.addIcon}
@@ -133,7 +194,7 @@ const AddMyPlant = () => {
           <TouchableOpacity
             style={styles.button}
             onPress={() => {
-              console.log("post thread");
+              postMyPlant();
             }}>
             <Text style={styles.buttonText}>Add Plant</Text>
           </TouchableOpacity>
@@ -164,14 +225,11 @@ const styles = StyleSheet.create({
   },
   titleInput: {
     height: 40,
-    // margin: 5,
     borderWidth: 1,
     borderRadius: 5,
     padding: 10,
   },
   descriptionInput: {
-    // height: 132,
-    // margin: 12,
     borderWidth: 1,
     borderRadius: 5,
     padding: 10,
@@ -237,16 +295,12 @@ const styles = StyleSheet.create({
   },
   dropdown1BtnStyle: {
     flex: 1,
-    // width: "80%",
-    // height: 50,
     backgroundColor: "#ffffff",
     borderRadius: 5,
     borderWidth: 1,
-    // borderColor: "#898989",
   },
   dropdown1BtnTxtStyle: {
     fontFamily: "Karla_500Medium",
-    // color: "#898989",
     fontSize: 14,
     textAlign: "left",
   },
@@ -257,7 +311,6 @@ const styles = StyleSheet.create({
   },
   dropdown1RowTxtStyle: {
     fontFamily: "Karla_500Medium",
-    // color: "#898989",
     fontSize: 14,
     textAlign: "left",
   },
