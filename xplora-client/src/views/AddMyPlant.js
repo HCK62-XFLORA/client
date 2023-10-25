@@ -151,92 +151,94 @@ const AddMyPlant = ({ navigation }) => {
   }, []);
   return (
     <>
-      <ScrollView style={styles.mainContainer}>
-        <Text style={styles.header}>Add Plant</Text>
-        <Text style={styles.label}>Plant name</Text>
-        <View style={styles.selectContainer}>
-          <SelectDropdown
-            data={plantData}
-            onSelect={(selectedItem, index) => {
-              // setPlantName(selectedItem.name);
-              setPlantId(selectedItem.id);
-              onChangDescription(selectedItem.description);
-            }}
-            defaultButtonText={"Select Plant"}
-            buttonTextAfterSelection={(selectedItem, index) => {
-              return selectedItem.name;
-            }}
-            rowTextForSelection={(item, index) => {
-              return item.name;
-            }}
-            buttonStyle={styles.dropdown1BtnStyle}
-            buttonTextStyle={styles.dropdown1BtnTxtStyle}
-            renderDropdownIcon={(isOpened) => {
-              return (
-                <FontAwesome
-                  name={isOpened ? "chevron-up" : "chevron-down"}
-                  color={"#444"}
-                  size={18}
+      <ScrollView style={{ backgroundColor: '#fff' }}>
+        <View style={styles.mainContainer}>
+          <Text style={styles.header}>Add Plant</Text>
+          <Text style={styles.label}>Plant name</Text>
+          <View style={styles.selectContainer}>
+            <SelectDropdown
+              data={plantData}
+              onSelect={(selectedItem, index) => {
+                // setPlantName(selectedItem.name);
+                setPlantId(selectedItem.id);
+                onChangDescription(selectedItem.description);
+              }}
+              defaultButtonText={"Select Plant"}
+              buttonTextAfterSelection={(selectedItem, index) => {
+                return selectedItem.name;
+              }}
+              rowTextForSelection={(item, index) => {
+                return item.name;
+              }}
+              buttonStyle={styles.dropdown1BtnStyle}
+              buttonTextStyle={styles.dropdown1BtnTxtStyle}
+              renderDropdownIcon={(isOpened) => {
+                return (
+                  <FontAwesome
+                    name={isOpened ? "chevron-up" : "chevron-down"}
+                    color={"#444"}
+                    size={18}
+                  />
+                );
+              }}
+              dropdownIconPosition={"right"}
+              dropdownStyle={styles.dropdown1DropdownStyle}
+              rowStyle={styles.dropdown1RowStyle}
+              rowTextStyle={styles.dropdown1RowTxtStyle}
+              selectedRowStyle={styles.dropdown1SelectedRowStyle}
+              search
+              searchInputStyle={styles.dropdown1searchInputStyleStyle}
+              searchPlaceHolder={"Search here"}
+              searchPlaceHolderColor={"darkgrey"}
+              renderSearchInputLeftIcon={() => {
+                return <FontAwesome name={"search"} color={"#444"} size={18} />;
+              }}
+            />
+          </View>
+          <Text style={styles.label}>Description</Text>
+          <View style={styles.inputContainer}>
+            <TextInput
+              editable={false}
+              scrollEnabled={true}
+              multiline
+              numberOfLines={8}
+              cursorColor={'#06674b'}
+              style={styles.descriptionInput}
+              // onChangeText={onChangDescription}
+              value={description}
+              placeholder={description}
+              placeholderTextColor="#aaa"
+            />
+          </View>
+
+          <View style={{ alignItems: 'center' }}>
+            {image ? (<Image source={{ uri: image.uri }} style={{ width: width * 0.8, height: height * 0.3 }} resizeMode="contain" />) : null}
+          </View>
+          <View style={styles.buttonContainer}>
+            <TouchableOpacity style={styles.buttonAddCover} onPress={pickImage}>
+              <View style={styles.buttonContent}>
+                <Image
+                  style={styles.addIcon}
+                  source={require("../../assets/add-img.png")}
                 />
-              );
-            }}
-            dropdownIconPosition={"right"}
-            dropdownStyle={styles.dropdown1DropdownStyle}
-            rowStyle={styles.dropdown1RowStyle}
-            rowTextStyle={styles.dropdown1RowTxtStyle}
-            selectedRowStyle={styles.dropdown1SelectedRowStyle}
-            search
-            searchInputStyle={styles.dropdown1searchInputStyleStyle}
-            searchPlaceHolder={"Search here"}
-            searchPlaceHolderColor={"darkgrey"}
-            renderSearchInputLeftIcon={() => {
-              return <FontAwesome name={"search"} color={"#444"} size={18} />;
-            }}
-          />
-        </View>
-        <Text style={styles.label}>Description</Text>
-        <View style={styles.inputContainer}>
-          <TextInput
-            editable={false}
-            scrollEnabled={true}
-            multiline
-            numberOfLines={8}
-            cursorColor={'#06674b'}
-            style={styles.descriptionInput}
-            // onChangeText={onChangDescription}
-            value={description}
-            placeholder={description}
-            placeholderTextColor="#aaa"
-          />
-        </View>
+                <Text style={styles.addCoverText}>{image ? 'Change Photo' : 'Add Photo'}</Text>
+              </View>
+            </TouchableOpacity>
+          </View>
 
-        <View style={{ alignItems: 'center' }}>
-          {image ? (<Image source={{ uri: image.uri }} style={{ width: width * 0.8, height: height * 0.3 }} resizeMode="contain" />) : null}
-        </View>
-        <View style={styles.buttonContainer}>
-          <TouchableOpacity style={styles.buttonAddCover} onPress={pickImage}>
-            <View style={styles.buttonContent}>
-              <Image
-                style={styles.addIcon}
-                source={require("../../assets/add-img.png")}
-              />
-              <Text style={styles.addCoverText}>{image ? 'Change Photo' : 'Add Photo'}</Text>
+          {isLoading ? (<ActivityIndicator />) : (
+            <View style={styles.buttonContainer}>
+              <TouchableOpacity
+                style={styles.button}
+                onPress={() => {
+                  postMyPlant();
+                }}>
+                <Text style={styles.buttonText}>Add Plant</Text>
+              </TouchableOpacity>
             </View>
-          </TouchableOpacity>
+          )}
         </View>
-
-        { isLoading ? (<ActivityIndicator/>) : (
-          <View style = {styles.buttonContainer}>
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() => {
-              postMyPlant();
-            }}>
-            <Text style={styles.buttonText}>Add Plant</Text>
-          </TouchableOpacity>
-        </View>
-        )}
-    </ScrollView >
+      </ScrollView >
     </>
   );
 };

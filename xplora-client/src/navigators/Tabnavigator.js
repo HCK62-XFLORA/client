@@ -55,7 +55,7 @@ export default function TabNavigator() {
         backgroundColor: "#fff",
         // paddingBottom: 8,
         // paddingTop: 8,
-        height: 85,
+        height: 61,
         shadowColor: "#000",
         shadowOffset: {
           width: 0,

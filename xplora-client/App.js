@@ -1,5 +1,5 @@
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View } from "react-native";
+import { Dimensions, StyleSheet, Text, View, SafeAreaView} from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import GetStarted from "./src/views/GetStarted";
@@ -10,7 +10,8 @@ import AddThreads from "./src/views/AddThreads";
 import TabNavigator from "./src/navigators/Tabnavigator";
 import {
   SafeAreaFrameContext,
-  SafeAreaView,
+  SafeAreaProvider,
+
 } from "react-native-safe-area-context";
 import MyPlantDetail from "./src/views/MyPlantDetail";
 import ForumDetail from "./src/views/ThreadDetail";
@@ -26,6 +27,8 @@ import PromoDetail from "./src/views/PromoDetail";
 import Toast from "react-native-toast-message";
 
 const Stack = createNativeStackNavigator();
+
+const { width, height } = Dimensions.get('screen')
 
 export default function App() {
   // token secure store get
@@ -79,46 +82,55 @@ export default function App() {
    */
 
   return (
-    // <SafeAreaView>
+
 
     <UserContext.Provider
       value={{ user, setUser, userProfile, setUserProfile, fetchUser }}>
-
-      <NavigationContainer>
-        <Stack.Navigator>
-          {!user ? (
-            <>
-              <Stack.Screen
-                name="GetStarted"
-                component={GetStarted}
-                options={{ headerShown: false }}
-              />
-              <Stack.Screen name="Login" component={Login} />
-              <Stack.Screen name="Register" component={Register} />
-            </>
-          ) : (
-            <>
-              <Stack.Screen name="TabNavigator" component={TabNavigator} />
-              {/* <Stack.Screen name="ImagePicker" component={ImagePickerExample} /> */}
-              <Stack.Screen name="AddThreads" component={AddThreads} />
-              <Stack.Screen name="AskAi" component={AskAi} />
-              <Stack.Screen name="ThreadDetail" component={ThreadDetail} />
-              <Stack.Screen name="AddMyPlant" component={AddMyPlant} />
-              <Stack.Screen name="MyPlantDetail" component={MyPlantDetail} />
-              <Stack.Screen name="MyVoucher" component={MyVoucher} />
-              <Stack.Screen
-                name="PromoDetail"
-                component={PromoDetail}
-                options={{
-                  // headerShown: false,
-                  mode: "modal",
-                }}
-              />
-            </>
-          )}
-        </Stack.Navigator>
-      </NavigationContainer>
-      <Toast />
+      <SafeAreaView style={{flex:1}}>
+      {/* <SafeAreaProvider> */}
+        <NavigationContainer>
+          <Stack.Navigator>
+            {!user ? (
+              <>
+                <Stack.Screen
+                  name="GetStarted"
+                  component={GetStarted}
+                  options={{ headerShown: false }}
+                />
+                <Stack.Screen name="Login" component={Login} />
+                <Stack.Screen name="Register" component={Register} />
+              </>
+            ) : (
+              <>
+                <Stack.Screen name="TabNavigator" component={TabNavigator}
+                  options={{ headerShown: false }} 
+                  // screenOptions={{
+                  //   headerShown: false
+                  // }}
+                />
+                {/* <Stack.Screen name="ImagePicker" component={ImagePickerExample} /> */}
+                <Stack.Screen name="AddThreads" component={AddThreads} 
+                 />
+                <Stack.Screen name="AskAi" component={AskAi} />
+                <Stack.Screen name="ThreadDetail" component={ThreadDetail} />
+                <Stack.Screen name="AddMyPlant" component={AddMyPlant} />
+                <Stack.Screen name="MyPlantDetail" component={MyPlantDetail} />
+                <Stack.Screen name="MyVoucher" component={MyVoucher} />
+                <Stack.Screen
+                  name="PromoDetail"
+                  component={PromoDetail}
+                  options={{
+                    // headerShown: false,
+                    mode: "modal",
+                  }}
+                />
+              </>
+            )}
+          </Stack.Navigator>
+        </NavigationContainer>
+        <Toast />
+        </SafeAreaView>
+      {/* </SafeAreaProvider> */}
     </UserContext.Provider>
   );
 }
