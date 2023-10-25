@@ -9,6 +9,7 @@ const windowHeight = Dimensions.get('window').height;
 
 
 export default function bannerCard({ item }) {
+    // console.log(item, '<<<<bannercard');
     return (
         <View style={promoStyles.container}
             from={{ opacity: 0, translateY: -50 }}
@@ -17,7 +18,7 @@ export default function bannerCard({ item }) {
             <View style={promoStyles.content
             }>
 
-                <Image source={item.image}
+                <Image source={{uri: item.image}}
                     resizeMode="cover"
                     style={promoStyles.image}
                 />
@@ -35,6 +36,7 @@ const promoStyles = StyleSheet.create({
         justifyContent: 'center',
         alignContent: 'center',
         width: windowWidth * 1,
+        marginTop: 8
     },
     content: {
         marginLeft: 16,

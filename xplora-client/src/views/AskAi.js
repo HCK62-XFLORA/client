@@ -61,22 +61,41 @@ const ChatRoom = () => {
     // import { generateResponse } from './ChatGPTService';
 
     // // ...previous code
-    
+
     // const sendMessage = async () => {
     //   if (!userInput) return;
-    
+
     //   setMessages(prevMessages => [...prevMessages, `User: ${userInput}`]);
     //   const botResponse = await generateResponse(userInput);
     //   setMessages(prevMessages => [...prevMessages, `ChatGPT: ${botResponse}`]);
     //   setUserInput('');
     // };
-  
+
     const sendMessage = async () => {
         if (text) {
             setMessages([...messages, { text, id: messages.length }]);
-            const botResponse = await generateResponse(text)
-            setMessages([...messages, { text, id: messages.length }])
+            const botResponse = await generateResponseFromChatGPT(text);
+            setMessages([...messages, { text: botResponse, id: messages.length }]);
             setText('');
+        }
+    };
+
+    const generateResponseFromChatGPT = async (userInput) => {
+        try {
+            const response = await axios.post('https://api.openai.com/v1/engines/chat/completions', {
+                prompt: userInput,
+                max_tokens: 60
+            }, {
+                headers: {
+                    'Authorization': `Bearer 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`, // Replace with your actual API key
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            return response.data.choices[0].text;
+        } catch (error) {
+            console.error(error);
+            return 'Error occurred while fetching a response.';
         }
     };
 
@@ -86,8 +105,8 @@ const ChatRoom = () => {
                 data={messages}
                 // keyExtractor={(item) => item.id.toString()}
                 renderItem={({ item }) => (
-                    <View style={styles.messageContainer}>
-                        <Text style={styles.messageText}>{item.text}</Text>
+                    <View style={item.type === 'user' ? styles.userMessageContainer : styles.botMessageContainer}>
+                        <Text style={item.type === 'user' ? styles.userMessageText : styles.botMessageText}>{item.text}</Text>
                     </View>
                 )}
             />
@@ -115,7 +134,7 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
         // padding: 16,
     },
-    messageContainer: {
+    userMessageContainer: {
         padding: 12,
         backgroundColor: '#EEF3EC',
         // margin: 4,
@@ -130,7 +149,21 @@ const styles = StyleSheet.create({
         alignItems: 'flex-end',
         // margin: 16
     },
-    messageText: {
+    botMessageContainer: {
+        padding: 12,
+        backgroundColor: '#E6E6E6', // Change to your preferred bot message background color
+        borderRadius: 8,
+        marginRight: 60, // Adjust the position to distinguish it from user messages
+        marginTop: 12,
+        marginLeft: 8,
+        alignItems: 'flex-start', // Align bot messages to the left
+    },
+    userMessageText: {
+        fontSize: 16,
+        // alignItems: 'flex-end'
+        maxWidth: width * 0.8,
+    },
+    botMessageText: {
         fontSize: 16,
         // alignItems: 'flex-end'
         maxWidth: width * 0.8,
