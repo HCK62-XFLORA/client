@@ -2,7 +2,7 @@ import { StyleSheet, Text, View, Image } from 'react-native'
 import React from 'react'
 
 const CommentCard = ({ item }) => {
-    // console.log(item);
+    // console.log(item), 'comment <<<';
     return (
         <View style={{
             flexDirection: 'row',
@@ -23,7 +23,7 @@ const CommentCard = ({ item }) => {
                 width: 315,
                 gap: 4
             }}>
-                <Text style={styles.paragraph}>John Doe</Text>
+                <Text style={styles.paragraph}>{item.User.username}</Text>
                 <Text style={styles.text}>{item.comment}</Text>
             </View>
         </View>

@@ -1,19 +1,11 @@
-import {
-  StyleSheet,
-  Text,
-  View,
-  FlatList,
-  ScrollView,
-  TouchableOpacity,
-  Image,
-  Dimensions,
-} from "react-native";
+import { StyleSheet, Text, View, FlatList, ScrollView, TouchableOpacity, Image, Dimensions } from 'react-native'
+import React, { useContext, useEffect, useState } from 'react'
 import { Button } from "react-native-paper";
-import React, { useContext, useEffect, useState } from "react";
-import UserCard from "../components/UserCard";
-import ThreadHome from "../components/Thread/ThreadHome";
+import UserCard from '../components/UserCard'
+import ThreadHome from '../components/Thread/ThreadHome'
 import axios from "axios";
 import { UserContext } from "../stores/UserContext";
+
 
 const threadsData = [
   {
@@ -85,7 +77,7 @@ const Threads = ({ navigation }) => {
   const fetchThreads = async () => {
     try {
       const { data } = await axios({
-        url: "https://wadinodev.com/threads?nthThreads=1&ForumId=",
+        url: "https://wadinodev.com/threads?nthThreads=2",
         method: "GET",
         headers: { access_token: user.access_token },
       });

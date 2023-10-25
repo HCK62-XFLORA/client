@@ -1,5 +1,5 @@
-import { StyleSheet, Text, View, Dimensions, Image, TouchableOpacity } from 'react-native'
-import React, { useContext, useState } from 'react'
+import { ScrollView, StyleSheet, Text, View, Dimensions, Image, TouchableOpacity } from 'react-native'
+import React, { useContext, useEffect, useState } from 'react'
 import { useRoute } from '@react-navigation/native';
 import {
     useFonts,
@@ -14,27 +14,29 @@ import axios from 'axios'
 import { UserContext } from '../stores/UserContext';
 
 
-const { width } = Dimensions.get('screen')
+const { width, height } = Dimensions.get('screen')
 
 
 
 const MyPlantDetail = ({ navigation }) => {
     const route = useRoute()
     const id = route.params.id
-    const { user } = useContext(UserContext);
-    
+    const { user, userProfile } = useContext(UserContext);
+    const [plant, setPlant] = useState({})
 
     // console.log(id, '<<<myplant');
     //   const [image, setImage] = useState(null);
+    // console.log(userProfile, '<<<plant detail');
 
     const fetchPlantById = async () => {
         try {
             const { data } = await axios({
-                url: "https://wadinodev.com/users/my-plants/",
+                url: `https://wadinodev.com/users/my-plant/${id}`,
                 method: "GET",
+                headers: { access_token: user.access_token }
             });
-            setThreads(data);
-            return data
+            setPlant(data);
+            // return data
         } catch (error) {
             console.log(error);
         }
@@ -81,6 +83,9 @@ const MyPlantDetail = ({ navigation }) => {
 
     };
 
+    useEffect(() => {
+        fetchPlantById()
+    }, [])
 
     const myPlantData =
     {
@@ -106,19 +111,19 @@ const MyPlantDetail = ({ navigation }) => {
 
     // console.log(id, '<<<<');
     return (
-        <View style={styles.mainContainer}>
+        <ScrollView style={styles.mainContainer}>
             <View style={styles.titleContainer}>
-                <Text style={styles.title}>{myPlantData.text}</Text>
-                <Text style={styles.contributor}>John Doe</Text>
+                <Text style={styles.title}>{plant?.Plant?.name}</Text>
+                <Text style={styles.contributor}>{userProfile.username}</Text>
                 <View style={styles.imageContainer}>
                     <Image
                         style={styles.plantImage}
                         // source={{ uri: `${myPlantData.image}` }}
-                        source={require('../../assets/MyPlantCard/card1.png')}
+                        source={{uri: `${plant.imgUrl}`}}
                         resizeMethod='contain'
                     />
                 </View>
-                <Text style={styles.paragraph}>{myPlantData.description}</Text>
+                <Text style={styles.paragraph}>{plant?.Plant?.description}</Text>
                 <TouchableOpacity
                     style={{ alignItems: 'center', marginTop: 16 }}
                     onPress={pickImage}
@@ -151,7 +156,7 @@ const MyPlantDetail = ({ navigation }) => {
                     </View>
                 </TouchableOpacity> */}
             </View>
-        </View>
+        </ScrollView>
     )
 }
 
@@ -159,9 +164,12 @@ export default MyPlantDetail
 
 const styles = StyleSheet.create({
     mainContainer: {
-        flex: 1,
+        // flex: 1,
         padding: 16,
         // gap: 8
+        height: height * 1.5,
+        // marginBottom: 70
+        // paddingBottom: 20
     },
     title: {
         color: "#000",
